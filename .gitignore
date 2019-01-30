@@ -1,7 +1,7 @@
 # Latex editor files
-.log
-.gz
-.aux
+*.log
+*.gz
+*.aux
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
