@@ -1,5 +1,5 @@
 # Django database login information file
-*.inf
+# *.inf
 
 # Latex editor files
 *.log
