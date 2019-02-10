@@ -1,0 +1,6 @@
+[client]
+database = welcomehome
+host = localhost
+user = root
+password = greencreatures
+default-character-set = utf8
