@@ -1,3 +1,6 @@
+# Django database login information file
+*.inf
+
 # Latex editor files
 *.log
 *.gz
