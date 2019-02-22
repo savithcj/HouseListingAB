@@ -1,17 +1,14 @@
 from django.shortcuts import render
 from django.views import generic
-from .models import PropertyListing
+from .models import Property
 
 class IndexView(generic.ListView):
     template_name = "global_listing/index.html"
-    model = PropertyListing
+    model = Property
 
     def get_queryset(self):
-        return PropertyListing.objects
+        return Property.objects
 
 class DetailView(generic.DetailView):
     template_name = "global_listing/detail.html"
-    model = PropertyListing
-
-
-# Create your views here.
+    model = Property
