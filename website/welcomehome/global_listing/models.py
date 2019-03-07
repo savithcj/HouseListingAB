@@ -17,8 +17,8 @@ class User(models.Model):
 	password = models.CharField(max_length=30)
 	email = models.CharField(max_length=30)
 
-# class PhoneNumber(models.Model):
-# 	user_id = models.ForeignKey(User, related_name='user_id', on_delete=models.DO_NOTHING)
+class PhoneNumber(models.Model):
+	user_id = models.ForeignKey(User, related_name='phonenumber_user_id', on_delete=models.DO_NOTHING)
 
 class Property(models.Model):
 	property_id = models.AutoField(primary_key=True)
