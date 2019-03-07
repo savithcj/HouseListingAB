@@ -22,9 +22,11 @@ h3 {
 }
 
 /* LAYOUT CSS */
+
 .pure-img-responsive {
+    object-fit: cover;
     max-width: 100%;
-    height: auto;
+    max-height: 100%;
 }
 
 #layout {
@@ -139,6 +141,9 @@ h3 {
 
 .post-images {
     margin: 1em 0;
+    width: inherit;  /* This makes the next two lines work in IE8. */
+    max-width: 100%; /* Add !important if needed. */
+    height: auto;
 }
 .post-image-meta {
     margin-top: -3.5em;
