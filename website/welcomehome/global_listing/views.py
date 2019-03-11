@@ -4,6 +4,14 @@ from .models import *
 from django.template import loader
 from django.urls import reverse
 
+##### imports for image upload
+# from django.contrib import messages
+# from django.http import HttpResponseRedirect
+# from django.contrib.auth.decorators import login_required
+# from django.forms import modelformset_factory
+# from .forms import *
+
+
 class IndexView(generic.ListView):
     model = Property
     context_object_name = 'latest_post_list'
@@ -28,3 +36,33 @@ class DetailView(generic.DetailView):
     # DetailView generic view uses a template called <app name>/<model name>_detail.html by default, unless overwritten by template_name
     # generic view expects the primary key value captured from the URL to be called 'pk', which is implemented in urls.py
 
+
+# ############### image upload
+# @login_required
+# def post(request):
+#     ImageFormSet = modelformset_factory(PropertyImages, form=ImageForm, extra=30)
+
+#     if request.method == 'POST':
+#         postForm = PostForm(request.POST)
+#         formset = ImageFormSet(request.POST, request.FILES, queryset=PropertyImages.objects.none())
+
+#         if postForm.is_valid() and formset.is_valid():
+#             post_form = postForm.save(commit=False)
+#             post_form.user = request.user
+#             post_form.save()
+
+#             for form in formset.cleaned_data:
+#                 if form:
+#                     image=form['image']
+#                     photo=PropertyImages(post=post_form, image=image)
+#                     photo.save()
+#             messages.success(request,"Upload success!")
+#             return HttpResponseRedirect("/")
+
+#         else:
+#             print(postForm.errors, formset.errors)
+        
+#     else:
+#         postForm = PostForm()
+#         formset = ImageFormSet(queryset=PropertyImages.objects.none())
+#     return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset})
