@@ -7,36 +7,48 @@ from django.template.defaultfilters import slugify
 
 # https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
 def get_image_filename(self, instance, filename):
-	title = instance.post.title
+	title = instance.post.address
 	slug = slugify(title)
 	return f"property_images/{slug}-{filename}"
 
-class User(models.Model):
+class UserProfile(models.Model):
 	user_id = models.AutoField(primary_key=True)
 	username = models.CharField(max_length=30)
 	password = models.CharField(max_length=30)
 	email = models.CharField(max_length=30)
 
 class PhoneNumber(models.Model):
-	user_id = models.ForeignKey(User, related_name='phonenumber_user_id', on_delete=models.DO_NOTHING)
+	user_id = models.ForeignKey(UserProfile, related_name='phonenumber_user_id', on_delete=models.DO_NOTHING)
 
 class Property(models.Model):
 	property_id = models.AutoField(primary_key=True)
-	user_id = models.ForeignKey(User, related_name='property_user_id', on_delete=models.DO_NOTHING)
+	user_id = models.ForeignKey(UserProfile, related_name='property_user_id', on_delete=models.DO_NOTHING)
 	is_active = models.BooleanField()
 	price = models.PositiveIntegerField()
 	list_date = models.DateField(auto_now=False, auto_now_add=True)
+	above_grade_sqft = models.PositiveIntegerField()
 	lot_size = models.PositiveIntegerField()
+	post_title = models.CharField(max_length=100, null=True)
+	post_priority = models.IntegerField(default=1)	# 0: featured, > 0: regular priority
 	description = models.CharField(max_length=2000)
 	is_commercial = models.BooleanField()
 	business = models.CharField(max_length=30)
-	num_of_buildings = models.PositiveIntegerField()
+	num_of_buildings = models.PositiveIntegerField(null=True)
 	is_residential = models.BooleanField()
 	residence_type = models.CharField(max_length=30)
 
 	def __str__(self):
-		return self.property_id #TODO: change to return address & price
+		return str(self.property_id)
 
+	def save(self, *args, **kwargs):
+		if self.post_title is None:
+			self.post_title = PropertyAddress.objects.get(property_id=self.property_id)
+		super(Property, self).save(*args, **kwargs)
+
+	def address(self):
+		return PropertyAddress.objects.get(property_id=self.property_id)
+
+	
 
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='roomspace_property_id', on_delete=models.DO_NOTHING)
@@ -74,3 +86,6 @@ class PropertyAddress(models.Model):
 	city = models.CharField(max_length = 200)
 	province = models.CharField(max_length=25)
 	postal = models.CharField(max_length = 7)
+
+	def __str__(self):
+		return str(self.street)
