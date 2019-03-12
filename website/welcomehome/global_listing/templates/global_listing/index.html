@@ -49,60 +49,67 @@
         <div>
             <!-- A wrapper for all postings -->
             <div class="posts">
+
+                <!--Featured Postings-->
+                 
+                {% if featured_posts %}
+
                 <h1 class="content-subhead">Featured Home</h1>
 
-                <!-- A single post -->
-                <section class="post">
-                    <header class="post-header">
-                        
-                        <h2 class="post-title">Introducing Beautiful Townhouse for a Small Family in Upper East Side</h2>
+                    {% for post in featured_posts %}
+                    <section class="post">
+                        <header class="post-header">
+                            
+                            <h2 class="post-title">{{ post.post_title }}</h2>
 
-                        <p class="post-meta">
-                            123 QuietPlace Lane <a class="post-category post-category-design" href="#">Townhouse</a> <a class="post-category post-category-pure" href="#">2-bedroom</a>
-                        </p>
-                    </header>
+                            <p class="post-meta">
+                                {{ post.address }} <a class="post-category post-category-design" href="#"> {{ post.residence_type }}</a><a class="post-category post-category-pure" href="#">{{ post.above_grade_sqft }}-sqft</a>
+                            </p>
+                        </header>
 
-                    <div class="post-description">
+                        <div class="post-description">
 
-                        <div class="post-images pure-g">
-                            <div class="pure-u-1 pure-u-md-1-2">
-                                <a href="#">
-                                    <img alt="pic1"
-                                         class="pure-img-responsive"
-                                         src="{% static 'temp/1A.jpg' %}">
-                                </a>
-                                <div class="post-image-meta">
-                                    <h3>Family Room</h3>
+                            <div class="post-images pure-g">
+                                <div class="pure-u-1 pure-u-md-1-2">
+                                    <a href="#">
+                                        <img alt="pic1"                         
+                                            class="pure-img-responsive"
+                                            src="{% static post.img_url_1 %}"> <!--TODO: Add image link tag-->
+                                    </a>
+                                    <div class="post-image-meta">
+                                        <h3>Image1</h3> <!--TODO: Add image description tag-->
+                                    </div>
+                                </div>
+
+                                <div class="pure-u-1 pure-u-md-1-2">
+                                    <a href="#">
+                                        <img alt="pic2"
+                                            class="pure-img-responsive"
+                                            src="{% static post.img_url_2 %}"> <!--TODO: Add image link tag-->
+                                    </a>
+                                    <div class="post-image-meta">
+                                        <h3>Image2</h3> <!--TODO: Add image description tag-->
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="pure-u-1 pure-u-md-1-2">
-                                <a href="#">
-                                    <img alt="pic2"
-                                         class="pure-img-responsive"
-                                         src="{% static 'temp/1B.jpg' %}">
-                                </a>
-                                <div class="post-image-meta">
-                                    <h3>Side Walk</h3>
-                                </div>
-                            </div>
+                            <p>
+                                {{ post.description }}
+                            </p>
                         </div>
-                        
-                        <p>
-                            This lovely 2 bedroom townhouse is only a few steps away from the Bow River pathway and is nestled 
-                            among beautiful garden pathways and minutes to downtown, The University of Calgary, and Foothills Hospital. 
-                        </p>
-                    </div>
-                </section>
+                    </section>
+                    {% endfor %}
+                {% endif %}
+
             </div>
 
             <div class="posts">
+
+                <!--Recent Postings-->
+                {% if recent_posts %}
                 <h1 class="content-subhead">Recent Postings</h1>
 
-                <!--Recent Posting 1-->
-                {% if latest_post_list %}
-                    {% for post in latest_post_list %}
-                    
+                    {% for post in recent_posts %}
                     <section class="post">
                         <header class="post-header">
                             
@@ -120,10 +127,10 @@
                                     <a href="#">
                                         <img alt="pic1"
                                             class="pure-img-responsive"
-                                            src="{% static post.img_url_1 %}">
+                                            src="{% static post.img_url_1 %}"> <!--TODO: Add image link tag-->
                                     </a>
                                     <div class="post-image-meta">
-                                        <h3>Image1</h3>
+                                        <h3>Image1</h3> <!--TODO: Add image description tag-->
                                     </div>
                                 </div>
 
@@ -131,10 +138,10 @@
                                     <a href="#">
                                         <img alt="pic2"
                                             class="pure-img-responsive"
-                                            src="{% static post.img_url_2 %}">
+                                            src="{% static post.img_url_2 %}"> <!--TODO: Add image link tag-->
                                     </a>
                                     <div class="post-image-meta">
-                                        <h3>Image2</h3>
+                                        <h3>Image2</h3> <!--TODO: Add image description tag-->
                                     </div>
                                 </div>
                             </div>

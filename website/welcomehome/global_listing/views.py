@@ -3,6 +3,7 @@ from django.views import generic
 from .models import *
 from django.template import loader
 from django.urls import reverse
+from django.db.models import Q
 
 ##### imports for image upload
 # from django.contrib import messages
@@ -26,7 +27,7 @@ class IndexView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
         context["featured_posts"] = Property.objects.filter(post_priority=0)
-        context["recent_posts"] = Property.objects.order_by('-list_date')[:10]
+        context["recent_posts"] = Property.objects.filter(Q(post_priority=1) | Q(post_priority=2)).order_by('-list_date')[:10]
         return context
 
 class DetailView(generic.DetailView):

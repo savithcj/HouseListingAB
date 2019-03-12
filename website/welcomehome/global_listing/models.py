@@ -90,7 +90,7 @@ def get_image_filename(self, instance):
 	slug = slugify(title)
 	return f"property_images/{slug}"
 
-class PropertyImages(models.Model):
-	property_id = models.ForeignKey(Property, related_name='propertyimages_property_id', default=None, on_delete=models.DO_NOTHING)
-	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
+# class PropertyImages(models.Model):
+# 	property_id = models.ForeignKey(Property, related_name='propertyimages_property_id', default=None, on_delete=models.DO_NOTHING)
+# 	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
 
