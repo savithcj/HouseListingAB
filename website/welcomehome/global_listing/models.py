@@ -41,6 +41,10 @@ class Property(models.Model):
 	def address(self):
 		return PropertyAddress.objects.get(property_id=self.property_id)
 
+	def image_paths(self):
+		images = PropertyImages.objects.filter(property_id=self.property_id)
+		return images[0]
+
 	
 
 class RoomSpace(models.Model):
@@ -86,11 +90,14 @@ class PropertyAddress(models.Model):
 # https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
 # https://www.geeksforgeeks.org/python-uploading-images-in-django/
 def get_image_filename(self, instance):
-	title = instance.property_id.address
+	title = instance.property_id.__str__ + instance.property_id.address
 	slug = slugify(title)
 	return f"property_images/{slug}"
 
-# class PropertyImages(models.Model):
-# 	property_id = models.ForeignKey(Property, related_name='propertyimages_property_id', default=None, on_delete=models.DO_NOTHING)
-# 	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
+class PropertyImages(models.Model):
+	property_id = models.ForeignKey(Property, related_name='propertyimages_property_id', default=None, on_delete=models.DO_NOTHING)
+	image = models.ImageField(upload_to='img_upload/%Y/%m/%D/', verbose_name='Image')
+
+	def image_path(self):
+		return get_image_filename
 

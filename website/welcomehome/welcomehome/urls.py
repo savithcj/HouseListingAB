@@ -20,10 +20,13 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path('', include ('global_listing.urls')),
-    path('global_listing/', include ('global_listing.urls')),
-    path('admin/', admin.site.urls)
+    path('', include('global_listing.urls')),
+    path('global_listing/', include('global_listing.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('admin/', admin.site.urls),
+    
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    

@@ -6,11 +6,11 @@ from django.urls import reverse
 from django.db.models import Q
 
 ##### imports for image upload
-# from django.contrib import messages
-# from django.http import HttpResponseRedirect
-# from django.contrib.auth.decorators import login_required
-# from django.forms import modelformset_factory
-# from .forms import *
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.forms import modelformset_factory
+from .forms import *
 
 
 class IndexView(generic.ListView):
@@ -40,30 +40,30 @@ class DetailView(generic.DetailView):
 
 # ############### image upload
 # @login_required
-# def post(request):
-#     ImageFormSet = modelformset_factory(PropertyImages, form=ImageForm, extra=30)
+def post(request):
+    ImageFormSet = modelformset_factory(PropertyImages, form=ImageForm, extra=30)
 
-#     if request.method == 'POST':
-#         postForm = PostForm(request.POST)
-#         formset = ImageFormSet(request.POST, request.FILES, queryset=PropertyImages.objects.none())
+    if request.method == 'POST':
+        postForm = PostForm(request.POST)
+        formset = ImageFormSet(request.POST, request.FILES, queryset=PropertyImages.objects.none())
 
-#         if postForm.is_valid() and formset.is_valid():
-#             post_form = postForm.save(commit=False)
-#             post_form.user = request.user
-#             post_form.save()
+        if postForm.is_valid() and formset.is_valid():
+            post_form = postForm.save(commit=False)
+            post_form.user = request.user
+            post_form.save()
 
-#             for form in formset.cleaned_data:
-#                 if form:
-#                     image=form['image']
-#                     photo=PropertyImages(post=post_form, image=image)
-#                     photo.save()
-#             messages.success(request,"Upload success!")
-#             return HttpResponseRedirect("/")
+            for form in formset.cleaned_data:
+                if form:
+                    image=form['image']
+                    photo=PropertyImages(post=post_form, image=image)
+                    photo.save()
+            messages.success(request,"Upload success!")
+            return HttpResponseRedirect("/")
 
-#         else:
-#             print(postForm.errors, formset.errors)
+        else:
+            print(postForm.errors, formset.errors)
         
-#     else:
-#         postForm = PostForm()
-#         formset = ImageFormSet(queryset=PropertyImages.objects.none())
-#     return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset})
+    else:
+        postForm = PostForm()
+        formset = ImageFormSet(queryset=PropertyImages.objects.none())
+    return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset})
