@@ -1,21 +1,20 @@
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.contrib.auth.models import User
+from phonenumber_field.modelfields import PhoneNumberField
 
 # https://docs.djangoproject.com/en/2.1/topics/db/models/
 # https://docs.djangoproject.com/en/2.1/ref/models/fields/#model-field-types
 
 class UserProfile(models.Model):
-	user_id = models.AutoField(primary_key=True)
-	username = models.CharField(max_length=30)
-	password = models.CharField(max_length=30)
+	user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
 	email = models.CharField(max_length=30)
-
-class PhoneNumber(models.Model):
-	user_id = models.ForeignKey(UserProfile, related_name='phonenumber_user_id', on_delete=models.DO_NOTHING)
+	phone_day = PhoneNumberField()
+	phone_alt = PhoneNumberField(null=True, blank=True)
 
 class Property(models.Model):
 	property_id = models.AutoField(primary_key=True)
-	user_id = models.ForeignKey(UserProfile, related_name='property_user_id', on_delete=models.DO_NOTHING)
+	user = models.ForeignKey(UserProfile, related_name='property_user', on_delete=models.DO_NOTHING)
 	is_active = models.BooleanField(default=True)
 	price = models.PositiveIntegerField(null=True)
 	list_date = models.DateField(auto_now=False, auto_now_add=True)
@@ -43,7 +42,7 @@ class Property(models.Model):
 
 	def image_paths(self):
 		images = PropertyImages.objects.filter(property_id=self.property_id)
-		return images[0]
+		return images
 
 	
 

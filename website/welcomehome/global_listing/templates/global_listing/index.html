@@ -74,10 +74,16 @@
                                     <a href="#">
                                         <img alt="pic1"                         
                                             class="pure-img-responsive"
-                                            src="{% static post.img_url_1 %}"> <!--TODO: Add image link tag-->
+                                            src="
+                                                {% for rs in post.image_paths|slice:':1' %}
+                                                {% static rs.image.url %}
+                                                {% endfor %}
+                                            ">
                                     </a>
                                     <div class="post-image-meta">
-                                        <h3>{{ post.image_paths }}</h3> <!--TODO: Add image description tag-->
+                                        <h3>
+                                        Image 1  
+                                        </h3> <!--TODO: Add image description alt tag-->
                                     </div>
                                 </div>
 
@@ -85,10 +91,16 @@
                                     <a href="#">
                                         <img alt="pic2"
                                             class="pure-img-responsive"
-                                            src="{% static post.img_url_2 %}"> <!--TODO: Add image link tag-->
+                                            src="
+                                                {% for rs in post.image_paths|slice:'1:2' %}
+                                                {% static rs.image.url %}
+                                                {% endfor %}
+                                            "> <!--TODO: Add image link tag-->
                                     </a>
                                     <div class="post-image-meta">
-                                        <h3>Image2</h3> <!--TODO: Add image description tag-->
+                                        <h3>
+                                        Image 2
+                                        </h3> <!--TODO: Add image description tag-->
                                     </div>
                                 </div>
                             </div>
@@ -127,10 +139,16 @@
                                     <a href="#">
                                         <img alt="pic1"
                                             class="pure-img-responsive"
-                                            src="{% static post.img_url_1 %}"> <!--TODO: Add image link tag-->
+                                            src="
+                                                {% for rs in post.image_paths|slice:':1' %}
+                                                {% static rs.image.url %}
+                                                {% endfor %}
+                                            ">
                                     </a>
                                     <div class="post-image-meta">
-                                        <h3>Image1</h3> <!--TODO: Add image description tag-->
+                                        <h3>
+                                        Image1
+                                        </h3> <!--TODO: Add image description tag-->
                                     </div>
                                 </div>
 
@@ -138,10 +156,16 @@
                                     <a href="#">
                                         <img alt="pic2"
                                             class="pure-img-responsive"
-                                            src="{% static post.img_url_2 %}"> <!--TODO: Add image link tag-->
+                                            src="
+                                                {% for rs in post.image_paths|slice:'1:2' %}
+                                                {% static rs.image.url %}
+                                                {% endfor %}
+                                            "> 
                                     </a>
                                     <div class="post-image-meta">
-                                        <h3>Image2</h3> <!--TODO: Add image description tag-->
+                                        <h3>
+                                        Image2
+                                        </h3> <!--TODO: Add image description tag-->
                                     </div>
                                 </div>
                             </div>
