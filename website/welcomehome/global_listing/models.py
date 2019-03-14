@@ -45,7 +45,6 @@ class Property(models.Model):
 		return images
 
 	
-
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='roomspace_property_id', on_delete=models.DO_NOTHING)
 	room_id = models.PositiveIntegerField()
@@ -96,6 +95,7 @@ def get_image_filename(self, instance):
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='propertyimages_property_id', default=None, on_delete=models.DO_NOTHING)
 	image = models.ImageField(upload_to='img_upload/%Y/%m/%D/', verbose_name='Image')
+
 
 	def image_path(self):
 		return get_image_filename
