@@ -1,42 +1,50 @@
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.contrib.auth.models import User
+from phonenumber_field.modelfields import PhoneNumberField
 
 # https://docs.djangoproject.com/en/2.1/topics/db/models/
 # https://docs.djangoproject.com/en/2.1/ref/models/fields/#model-field-types
 
-
-# https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
-def get_image_filename(self, instance, filename):
-	title = instance.post.title
-	slug = slugify(title)
-	return f"property_images/{slug}-{filename}"
-
-class User(models.Model):
-	user_id = models.AutoField(primary_key=True)
-	username = models.CharField(max_length=30)
-	password = models.CharField(max_length=30)
+class UserProfile(models.Model):
+	user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
 	email = models.CharField(max_length=30)
-
-class PhoneNumber(models.Model):
-	user_id = models.ForeignKey(User, related_name='phonenumber_user_id', on_delete=models.DO_NOTHING)
+	phone_day = PhoneNumberField()
+	phone_alt = PhoneNumberField(null=True, blank=True)
 
 class Property(models.Model):
 	property_id = models.AutoField(primary_key=True)
-	user_id = models.ForeignKey(User, related_name='property_user_id', on_delete=models.DO_NOTHING)
-	is_active = models.BooleanField()
-	price = models.PositiveIntegerField()
+	user = models.ForeignKey(UserProfile, related_name='property_user', on_delete=models.DO_NOTHING)
+	is_active = models.BooleanField(default=True)
+	price = models.PositiveIntegerField(null=True)
 	list_date = models.DateField(auto_now=False, auto_now_add=True)
-	lot_size = models.PositiveIntegerField()
-	description = models.CharField(max_length=2000)
-	is_commercial = models.BooleanField()
-	business = models.CharField(max_length=30)
-	num_of_buildings = models.PositiveIntegerField()
-	is_residential = models.BooleanField()
-	residence_type = models.CharField(max_length=30)
+	above_grade_sqft = models.PositiveIntegerField(null=True)
+	lot_size = models.PositiveIntegerField(null=True)
+	post_title = models.CharField(max_length=128, null=True)
+	post_priority = models.IntegerField(default=1)	# 0: featured, > 0: regular priority
+	description = models.CharField(max_length=2450)
+	is_commercial = models.BooleanField(null=True)
+	business = models.CharField(max_length=30,null=True)
+	num_of_buildings = models.PositiveIntegerField(null=True)
+	is_residential = models.BooleanField(null=True)
+	residence_type = models.CharField(max_length=30, null=True)
 
 	def __str__(self):
-		return self.property_id #TODO: change to return address & price
+		return str(self.property_id)
 
+	def save(self, *args, **kwargs):
+		if self.post_title is None:
+			self.post_title = PropertyAddress.objects.get(property_id=self.property_id)
+		super(Property, self).save(*args, **kwargs)
+
+	def address(self):
+		return PropertyAddress.objects.get(property_id=self.property_id)
+
+	def image_paths(self):
+		images = PropertyImages.objects.filter(property_id=self.property_id)
+		return images
+
+	
 
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='roomspace_property_id', on_delete=models.DO_NOTHING)
@@ -64,13 +72,31 @@ class RoomFlooring(models.Model):
 	room_id = models.ForeignKey(RoomSpace, related_name='roomfloor_room_id', on_delete=models.DO_NOTHING)
 	flooring = models.CharField(max_length=30)
 
-class PropertyImages(models.Model):
-	property_id = models.ForeignKey(Property, related_name='propertyimages_property_id', on_delete=models.DO_NOTHING)
-	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
-
 class PropertyAddress(models.Model):
 	property_id = models.ForeignKey(Property, related_name='propertyaddress_property_id', on_delete=models.DO_NOTHING)
 	street = models.CharField(max_length = 200)
 	city = models.CharField(max_length = 200)
 	province = models.CharField(max_length=25)
 	postal = models.CharField(max_length = 7)
+
+	def __str__(self):
+		return str(self.street)
+
+
+
+######### Image Upload
+
+# https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
+# https://www.geeksforgeeks.org/python-uploading-images-in-django/
+def get_image_filename(self, instance):
+	title = instance.property_id.__str__ + instance.property_id.address
+	slug = slugify(title)
+	return f"property_images/{slug}"
+
+class PropertyImages(models.Model):
+	property_id = models.ForeignKey(Property, related_name='propertyimages_property_id', default=None, on_delete=models.DO_NOTHING)
+	image = models.ImageField(upload_to='img_upload/%Y/%m/%D/', verbose_name='Image')
+
+	def image_path(self):
+		return get_image_filename
+
