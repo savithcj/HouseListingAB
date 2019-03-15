@@ -78,7 +78,7 @@
                                             class="pure-img-responsive"
                                             src="
                                                 {% for rs in post.image_paths|slice:':1' %}
-                                                {% static rs.image.url %}
+                                                {{ rs.image.url }}
                                                 {% endfor %}
                                             ">
                                     </a>

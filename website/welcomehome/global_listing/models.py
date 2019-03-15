@@ -40,13 +40,13 @@ class Property(models.Model):
 	def address(self):
 		return PropertyAddress.objects.get(property_id=self.property_id)
 
-	def image_paths(self):
+	def images(self):
 		images = PropertyImages.objects.filter(property_id=self.property_id)
 		return images
 
 	
 class RoomSpace(models.Model):
-	property_id = models.ForeignKey(Property, related_name='roomspace_property_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.DO_NOTHING)
 	room_id = models.PositiveIntegerField()
 	name = models.CharField(max_length=30)
 	description = models.CharField(max_length=30)
@@ -57,7 +57,7 @@ class RoomSpace(models.Model):
 	size = models.FloatField()
 
 class RoomType(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='roomtype_property_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(RoomSpace, related_name='room_type', on_delete=models.DO_NOTHING)
 	room_id = models.ForeignKey(RoomSpace, related_name='roomtype_room_id', on_delete=models.DO_NOTHING)
 	room_type = models.CharField(max_length=30)
 
@@ -73,30 +73,39 @@ class RoomFlooring(models.Model):
 
 class PropertyAddress(models.Model):
 	property_id = models.ForeignKey(Property, related_name='propertyaddress_property_id', on_delete=models.DO_NOTHING)
-	street = models.CharField(max_length = 200)
-	city = models.CharField(max_length = 200)
+	street = models.CharField(max_length=200)
+	city = models.CharField(max_length=200)
 	province = models.CharField(max_length=25)
-	postal = models.CharField(max_length = 7)
+	postal = models.CharField(max_length=7)
 
 	def __str__(self):
 		return str(self.street)
-
 
 
 ######### Image Upload
 
 # https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
 # https://www.geeksforgeeks.org/python-uploading-images-in-django/
-def get_image_filename(self, instance):
-	title = instance.property_id.__str__ + instance.property_id.address
+def get_image_filename(instance, filename):
+	title = str(instance.property_id) + instance.property_id.address
 	slug = slugify(title)
 	return f"property_images/{slug}"
 
 class PropertyImages(models.Model):
-	property_id = models.ForeignKey(Property, related_name='propertyimages_property_id', default=None, on_delete=models.DO_NOTHING)
-	image = models.ImageField(upload_to='img_upload/%Y/%m/%D/', verbose_name='Image')
-
+	property_id = models.ForeignKey(Property, related_name='image', null=True, on_delete=models.DO_NOTHING)
+	title = models.CharField(max_length=25)
+	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')  #'img_upload/%Y/%m/%D/'
 
 	def image_path(self):
 		return get_image_filename
 
+	def image_title(self):
+		return self.title
+
+
+def edit_property(request, prop_id):
+	prop_instance = get_object_or_404(Property, id=prop_id)
+
+	print(prop_instance.propertyimages_property_id.all())
+
+	return render()

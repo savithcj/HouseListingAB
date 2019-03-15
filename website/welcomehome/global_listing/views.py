@@ -39,7 +39,7 @@ class DetailView(generic.DetailView):
 
 
 # ############### image upload
-# @login_required
+@login_required
 def post(request):
     ImageFormSet = modelformset_factory(PropertyImages, form=ImageForm, extra=30)
 
@@ -66,4 +66,4 @@ def post(request):
     else:
         postForm = PostForm()
         formset = ImageFormSet(queryset=PropertyImages.objects.none())
-    return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset})
+    return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset, 'property_instance': instance})

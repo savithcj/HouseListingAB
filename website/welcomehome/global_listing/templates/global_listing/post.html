@@ -1,4 +1,4 @@
-{% comment %} 
+
 
 <!DOCTYPE html> 
 <html lang="en"> 
@@ -25,9 +25,13 @@
         {{ form }}
     {% endfor %}
 
+    {%for image in property_instance.propertyimages_property_id.all %} 
+    <img src="{{image.image.get_url}}"/>
+    {%endfor%}
+
 
     <input type="submit" name="submit" value="Submit" />
 </form>
 </body> 
 
-</html>  {% endcomment %}
+</html> 
