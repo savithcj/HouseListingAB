@@ -40,9 +40,6 @@ class Property(models.Model):
 	def address(self):
 		return PropertyAddress.objects.get(property_id=self.property_id)
 
-	def images(self):
-		images = PropertyImages.objects.filter(property_id=self.property_id)
-		return images
 
 	
 class RoomSpace(models.Model):
@@ -57,22 +54,22 @@ class RoomSpace(models.Model):
 	size = models.FloatField()
 
 class RoomType(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='room_type', on_delete=models.DO_NOTHING)
-	room_id = models.ForeignKey(RoomSpace, related_name='roomtype_room_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(RoomSpace, related_name='property_room_type', on_delete=models.DO_NOTHING)
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
 	room_type = models.CharField(max_length=30)
 
 class RoomDimension(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='roomdimension_property_id', on_delete=models.DO_NOTHING)
-	room_id = models.ForeignKey(RoomSpace, related_name='roomdimension_room_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(RoomSpace, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
 	dimension = models.FloatField()
 
 class RoomFlooring(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='roomfloor_property_id', on_delete=models.DO_NOTHING)
-	room_id = models.ForeignKey(RoomSpace, related_name='roomfloor_room_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(RoomSpace, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
 	flooring = models.CharField(max_length=30)
 
 class PropertyAddress(models.Model):
-	property_id = models.ForeignKey(Property, related_name='propertyaddress_property_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='property_address', on_delete=models.DO_NOTHING)
 	street = models.CharField(max_length=200)
 	city = models.CharField(max_length=200)
 	province = models.CharField(max_length=25)
@@ -92,15 +89,15 @@ def get_image_filename(instance, filename):
 	return f"property_images/{slug}"
 
 class PropertyImages(models.Model):
-	property_id = models.ForeignKey(Property, related_name='image', null=True, on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='property_image', null=True, on_delete=models.DO_NOTHING)
 	title = models.CharField(max_length=25)
-	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')  #'img_upload/%Y/%m/%D/'
+	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')  #upload_to='img_upload/%Y/%m/%D/'
 
 	def image_path(self):
 		return get_image_filename
 
-	def image_title(self):
-		return self.title
+	# def image_title(self):
+	# 	return self.title
 
 
 def edit_property(request, prop_id):
