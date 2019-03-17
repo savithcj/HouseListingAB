@@ -12,12 +12,12 @@ INSERT INTO welcomehome.global_listing_propertyaddress (id, street, city, provin
 INSERT INTO welcomehome.global_listing_propertyaddress (id, street, city, province, postal, property_id_id) VALUES (3, '789 Party Boulevard', 'Calgary', 'AB', 'E2W4R5', 3);
 INSERT INTO welcomehome.global_listing_propertyaddress (id, street, city, province, postal, property_id_id) VALUES (4, '007 Ghetto Drive', 'Red Deer', 'AB', 'R3E2W3', 4);
 
-INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (1, 'temp/1A.jpg', 1);
-INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (2, 'temp/1B.jpg', 1);
-INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (3, 'temp/2A.jpg', 2);
-INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (4, 'temp/2B.jpg', 2);
-INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (5, 'temp/3A.jpg', 3);
-INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (6, 'temp/3B.jpg', 3);
-INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (7, 'temp/4A.jpg', 4);
-INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (8, 'temp/4B.jpg', 4);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, title, property_id_id) VALUES (1, 'temp/1A.jpg', 'im1', 1);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, title, property_id_id) VALUES (2, 'temp/1B.jpg', 'im2', 1);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, title, property_id_id) VALUES (3, 'temp/2A.jpg', 'im1', 2);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, title, property_id_id) VALUES (4, 'temp/2B.jpg', 'im2', 2);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, title, property_id_id) VALUES (5, 'temp/3A.jpg', 'im1', 3);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, title, property_id_id) VALUES (6, 'temp/3B.jpg', 'im2', 3);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, title, property_id_id) VALUES (7, 'temp/4A.jpg', 'im1', 4);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, title, property_id_id) VALUES (8, 'temp/4B.jpg', 'im2', 4);
 
