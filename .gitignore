@@ -1,3 +1,6 @@
+# Migrations
+migrations/
+
 # Django database login information file
 # *.inf
 
