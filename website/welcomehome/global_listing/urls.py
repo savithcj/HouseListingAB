@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', IndexView.as_view(), name = 'global_listing'),
-    path('listing/<int:pk>/', ListingDetailView.as_view(), name='listing-detail'),
+    path('<int:pk>/', ListingDetailView.as_view(), name='listing-detail'),
     path('post/', post, name = 'post'),
     
 ]

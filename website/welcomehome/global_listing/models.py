@@ -30,15 +30,16 @@ class Property(models.Model):
 	residence_type = models.CharField(max_length=30, null=True)
 
 	def __str__(self):
-		return str(self.property_id)
+		return str(self.property_id) 
 
 	def save(self, *args, **kwargs):
 		if self.post_title is None:
 			self.post_title = PropertyAddress.objects.get(property_id=self.property_id)
 		super(Property, self).save(*args, **kwargs)
 
-	def address(self):
-		return PropertyAddress.objects.get(property_id=self.property_id)
+	def image_paths(self):
+		images = PropertyImages.objects.filter(property_id=self.property_id)
+		return images
 
 
 	
@@ -69,7 +70,7 @@ class RoomFlooring(models.Model):
 	flooring = models.CharField(max_length=30)
 
 class PropertyAddress(models.Model):
-	property_id = models.ForeignKey(Property, related_name='property_address', on_delete=models.DO_NOTHING)
+	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.DO_NOTHING)
 	street = models.CharField(max_length=200)
 	city = models.CharField(max_length=200)
 	province = models.CharField(max_length=25)
@@ -84,20 +85,19 @@ class PropertyAddress(models.Model):
 # https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
 # https://www.geeksforgeeks.org/python-uploading-images-in-django/
 def get_image_filename(instance, filename):
-	title = str(instance.property_id) + instance.property_id.address
+	title = str(instance.property_id) + str(instance.property_id.address) + '/%Y/%m/%D'
 	slug = slugify(title)
 	return f"property_images/{slug}"
 
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='property_image', null=True, on_delete=models.DO_NOTHING)
 	title = models.CharField(max_length=25)
-	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')  #upload_to='img_upload/%Y/%m/%D/'
+	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
 
 	def image_path(self):
 		return get_image_filename
 
-	# def image_title(self):
-	# 	return self.title
+
 
 
 def edit_property(request, prop_id):
