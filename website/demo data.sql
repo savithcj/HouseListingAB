@@ -1,0 +1,23 @@
+-- Demo data, run after creating a superuser.
+
+INSERT INTO welcomehome.global_listing_userprofile (id, email, phone_day, phone_alt, user_id) VALUES (1, 'oscar@chen.com', '40312345678', null, 1);
+
+INSERT INTO welcomehome.global_listing_property (property_id, is_active, price, list_date, above_grade_sqft, lot_size, post_title, post_priority, description, is_commercial, business, num_of_buildings, is_residential, residence_type, user_id) VALUES (1, 1, 1000000, '2019-03-10', 1500, 2000, 'Introducing Beautiful Townhouse for a Small Family in Upper East Side', 0, 'This lovely 2 bedroom townhouse is only a few steps away from the Bow River pathway and is nestled among beautiful garden pathways and minutes to downtown, The University of Calgary, and Foothills Hospital.', 0, '', 1, 1, 'Townhouse', 1);
+INSERT INTO welcomehome.global_listing_property (property_id, is_active, price, list_date, above_grade_sqft, lot_size, post_title, post_priority, description, is_commercial, business, num_of_buildings, is_residential, residence_type, user_id) VALUES (2, 1, 900000, '2019-03-10', 2500, 1500, 'A Magical Heritage House for a Large Family including Extended Families Like Even Your Third Cousins', 1, 'Updated character Elbow Park bungalow located on a large tree lot. Walking in to this home you are greeted with loads of light, brilliant refinished hardwood floors, sunroom, updated powder room, pot lighting, a living dining area open to an updated modern kitchen which includes a huge island, top of the line Stainless Steele appliances, and beautiful stone counter tops.', 0, '', 1, 1, 'House', 1);
+INSERT INTO welcomehome.global_listing_property (property_id, is_active, price, list_date, above_grade_sqft, lot_size, post_title, post_priority, description, is_commercial, business, num_of_buildings, is_residential, residence_type, user_id) VALUES (3, 1, 800000, '2019-03-08', 700, 0, 'A Cool Condo for an Urban Party Legend', 1, 'Located on the beautiful Bow River and within walking distance of Prince\\''s Island Park, Claire Bow Estates offers exceptional condominium living in Calgary. With the centre of commerce, downtown shopping, Stephen Avenue and restaurants all located within a few blocks. In winter, you can enjoy quick access through the downtown via the Plus 15 walkways. This elegant home boasts a spacious living room with marble gas fireplace, semi divided dining room area, large country style kitchen with granite counter-tops and an island with an electric cooktop.', 0, '', 1, 1, 'Condo', 1);
+INSERT INTO welcomehome.global_listing_property (property_id, is_active, price, list_date, above_grade_sqft, lot_size, post_title, post_priority, description, is_commercial, business, num_of_buildings, is_residential, residence_type, user_id) VALUES (4, 1, 1, '2019-03-06', 1000, 1800, 'An Affordable Home for Mordern Cost-conscious Living', 1, 'Your chance to own a home at an economical price! Located on one of the largest parcels in the complex so there is plenty of parking, a good-sized deck and fenced yard space.', 0, '', 1, 1, 'Mobile', 1);
+
+INSERT INTO welcomehome.global_listing_propertyaddress (id, street, city, province, postal, property_id_id) VALUES (1, '123 Happy Lane', 'Calgary', 'AB', 'T3R2D4', 1);
+INSERT INTO welcomehome.global_listing_propertyaddress (id, street, city, province, postal, property_id_id) VALUES (2, '456 Haunted Hills', 'Edmonton', 'AB', 'U6T2D3', 2);
+INSERT INTO welcomehome.global_listing_propertyaddress (id, street, city, province, postal, property_id_id) VALUES (3, '789 Party Boulevard', 'Calgary', 'AB', 'E2W4R5', 3);
+INSERT INTO welcomehome.global_listing_propertyaddress (id, street, city, province, postal, property_id_id) VALUES (4, '007 Ghetto Drive', 'Red Deer', 'AB', 'R3E2W3', 4);
+
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (1, 'temp/1A.jpg', 1);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (2, 'temp/1B.jpg', 1);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (3, 'temp/2A.jpg', 2);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (4, 'temp/2B.jpg', 2);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (5, 'temp/3A.jpg', 3);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (6, 'temp/3B.jpg', 3);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (7, 'temp/4A.jpg', 4);
+INSERT INTO welcomehome.global_listing_propertyimages (id, image, property_id_id) VALUES (8, 'temp/4B.jpg', 4);
+

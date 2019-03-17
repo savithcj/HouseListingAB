@@ -30,24 +30,21 @@ class Property(models.Model):
 	residence_type = models.CharField(max_length=30, null=True)
 
 	def __str__(self):
-		return str(self.property_id)
+		return str(self.property_id) 
 
 	def save(self, *args, **kwargs):
 		if self.post_title is None:
 			self.post_title = PropertyAddress.objects.get(property_id=self.property_id)
 		super(Property, self).save(*args, **kwargs)
 
-	def address(self):
-		return PropertyAddress.objects.get(property_id=self.property_id)
-
 	def image_paths(self):
 		images = PropertyImages.objects.filter(property_id=self.property_id)
 		return images
 
-	
 
+	
 class RoomSpace(models.Model):
-	property_id = models.ForeignKey(Property, related_name='roomspace_property_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.DO_NOTHING)
 	room_id = models.PositiveIntegerField()
 	name = models.CharField(max_length=30)
 	description = models.CharField(max_length=30)
@@ -58,45 +55,54 @@ class RoomSpace(models.Model):
 	size = models.FloatField()
 
 class RoomType(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='roomtype_property_id', on_delete=models.DO_NOTHING)
-	room_id = models.ForeignKey(RoomSpace, related_name='roomtype_room_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(RoomSpace, related_name='property_room_type', on_delete=models.DO_NOTHING)
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
 	room_type = models.CharField(max_length=30)
 
 class RoomDimension(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='roomdimension_property_id', on_delete=models.DO_NOTHING)
-	room_id = models.ForeignKey(RoomSpace, related_name='roomdimension_room_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(RoomSpace, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
 	dimension = models.FloatField()
 
 class RoomFlooring(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='roomfloor_property_id', on_delete=models.DO_NOTHING)
-	room_id = models.ForeignKey(RoomSpace, related_name='roomfloor_room_id', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(RoomSpace, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
 	flooring = models.CharField(max_length=30)
 
 class PropertyAddress(models.Model):
-	property_id = models.ForeignKey(Property, related_name='propertyaddress_property_id', on_delete=models.DO_NOTHING)
-	street = models.CharField(max_length = 200)
-	city = models.CharField(max_length = 200)
+	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.DO_NOTHING)
+	street = models.CharField(max_length=200)
+	city = models.CharField(max_length=200)
 	province = models.CharField(max_length=25)
-	postal = models.CharField(max_length = 7)
+	postal = models.CharField(max_length=7)
 
 	def __str__(self):
 		return str(self.street)
-
 
 
 ######### Image Upload
 
 # https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
 # https://www.geeksforgeeks.org/python-uploading-images-in-django/
-def get_image_filename(self, instance):
-	title = instance.property_id.__str__ + instance.property_id.address
+def get_image_filename(instance, filename):
+	title = str(instance.property_id) + str(instance.property_id.address) + '/%Y/%m/%D'
 	slug = slugify(title)
 	return f"property_images/{slug}"
 
 class PropertyImages(models.Model):
-	property_id = models.ForeignKey(Property, related_name='propertyimages_property_id', default=None, on_delete=models.DO_NOTHING)
-	image = models.ImageField(upload_to='img_upload/%Y/%m/%D/', verbose_name='Image')
+	property_id = models.ForeignKey(Property, related_name='property_image', null=True, on_delete=models.DO_NOTHING)
+	title = models.CharField(max_length=25)
+	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
 
 	def image_path(self):
 		return get_image_filename
 
+
+
+
+def edit_property(request, prop_id):
+	prop_instance = get_object_or_404(Property, id=prop_id)
+
+	print(prop_instance.propertyimages_property_id.all())
+
+	return render()

@@ -60,10 +60,12 @@
                     <section class="post">
                         <header class="post-header">
                             
-                            <h2 class="post-title">{{ post.post_title }}</h2>
+                            <h3> <a class="post-title" href="{% url 'listing-detail' post.property_id %}"> {{ post.post_title }}</a></h3>
 
                             <p class="post-meta">
-                                {{ post.address }} <a class="post-category post-category-design" href="#"> {{ post.residence_type }}</a><a class="post-category post-category-pure" href="#">{{ post.above_grade_sqft }}-sqft</a>
+                                {{ post.property_address }} 
+                                <a class="post-category post-category-home-type"> {{ post.residence_type }}</a>
+                                <a class="post-category post-category-pure">{{ post.above_grade_sqft }}-sqft</a>
                             </p>
                         </header>
 
@@ -76,13 +78,13 @@
                                             class="pure-img-responsive"
                                             src="
                                                 {% for rs in post.image_paths|slice:':1' %}
-                                                {% static rs.image.url %}
+                                                {{ rs.image.url }}
                                                 {% endfor %}
                                             ">
                                     </a>
                                     <div class="post-image-meta">
                                         <h3>
-                                        Image 1  
+                                        Image 1 {{ post.first_image }}
                                         </h3> <!--TODO: Add image description alt tag-->
                                     </div>
                                 </div>
@@ -93,7 +95,7 @@
                                             class="pure-img-responsive"
                                             src="
                                                 {% for rs in post.image_paths|slice:'1:2' %}
-                                                {% static rs.image.url %}
+                                                {{ rs.image.url }}
                                                 {% endfor %}
                                             "> <!--TODO: Add image link tag-->
                                     </a>
@@ -125,10 +127,12 @@
                     <section class="post">
                         <header class="post-header">
                             
-                            <h2 class="post-title">{{ post.post_title }}</h2>
+                            <h3> <a class="post-title" href="{% url 'listing-detail' post.property_id %}"> {{ post.post_title }}</a></h3>
 
                             <p class="post-meta">
-                                {{ post.address }} <a class="post-category post-category-design" href="#"> {{ post.residence_type }}</a><a class="post-category post-category-pure" href="#">{{ post.above_grade_sqft }}-sqft</a>
+                                {{ post.property_address }} 
+                                <a class="post-category post-category-home-type">{{ post.residence_type }}</a>
+                                <a class="post-category post-category-pure">{{ post.above_grade_sqft }}-sqft</a>
                             </p>
                         </header>
 
@@ -141,7 +145,7 @@
                                             class="pure-img-responsive"
                                             src="
                                                 {% for rs in post.image_paths|slice:':1' %}
-                                                {% static rs.image.url %}
+                                                {{ rs.image.url }}
                                                 {% endfor %}
                                             ">
                                     </a>
@@ -158,7 +162,7 @@
                                             class="pure-img-responsive"
                                             src="
                                                 {% for rs in post.image_paths|slice:'1:2' %}
-                                                {% static rs.image.url %}
+                                                {{ rs.image.url }}
                                                 {% endfor %}
                                             "> 
                                     </a>

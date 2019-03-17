@@ -17,6 +17,7 @@ class IndexView(generic.ListView):
     model = Property
     context_object_name = 'latest_post_list'
     template_name = 'global_listing/index.html'
+    ordering = ['-list_date']
     
     # ListView uses a template called <app name>/<model name>_list.html by default, unless overwrite by template_name.
     # For generic ListView, the automatically generated context variable is question_list, unless overwriten by context_object_name
@@ -30,18 +31,18 @@ class IndexView(generic.ListView):
         context["recent_posts"] = Property.objects.filter(Q(post_priority=1) | Q(post_priority=2)).order_by('-list_date')[:10]
         return context
 
-class DetailView(generic.DetailView):
+class ListingDetailView(generic.DetailView):
     model = Property
-    template_name = "global_listing/detail.html"
+    template_name = "global_listing/listing_detail.html"
     
     # DetailView generic view uses a template called <app name>/<model name>_detail.html by default, unless overwritten by template_name
     # generic view expects the primary key value captured from the URL to be called 'pk', which is implemented in urls.py
 
 
 # ############### image upload
-# @login_required
+@login_required
 def post(request):
-    ImageFormSet = modelformset_factory(PropertyImages, form=ImageForm, extra=30)
+    ImageFormSet = modelformset_factory(PropertyImages, form=ImageForm)
 
     if request.method == 'POST':
         postForm = PostForm(request.POST)
@@ -66,4 +67,4 @@ def post(request):
     else:
         postForm = PostForm()
         formset = ImageFormSet(queryset=PropertyImages.objects.none())
-    return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset})
+    return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset, 'property_instance': instance})
