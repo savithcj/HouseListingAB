@@ -38,7 +38,8 @@ class Property(models.Model):
 		super(Property, self).save(*args, **kwargs)
 
 	def image_paths(self):
-		images = PropertyImages.objects.filter(property_id=self.property_id)
+		# images = PropertyImages.objects.filter(property_id=self.property_id)
+		images = self.property_image.all()
 		return images
 
 
@@ -87,7 +88,7 @@ class PropertyAddress(models.Model):
 def get_image_filename(instance, filename):
 	title = str(instance.property_id) + str(instance.property_id.address) + '/%Y/%m/%D'
 	slug = slugify(title)
-	return f"property_images/{slug}"
+	return f"{slug}"
 
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='property_image', null=True, on_delete=models.DO_NOTHING)
