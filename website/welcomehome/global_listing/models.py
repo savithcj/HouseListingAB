@@ -99,8 +99,6 @@ class PropertyImages(models.Model):
 		return get_image_filename
 
 
-
-
 def edit_property(request, prop_id):
 	prop_instance = get_object_or_404(Property, id=prop_id)
 

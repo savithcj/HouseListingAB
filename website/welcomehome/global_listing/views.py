@@ -68,3 +68,4 @@ def post(request):
         postForm = PostForm()
         formset = ImageFormSet(queryset=PropertyImages.objects.none())
     return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset, 'property_instance': instance})
+    
