@@ -23,10 +23,10 @@ class Property(models.Model):
 	post_title = models.CharField(max_length=128, null=True)
 	post_priority = models.IntegerField(default=1)	# 0: featured, > 0: regular priority
 	description = models.CharField(max_length=2450)
-	is_commercial = models.BooleanField(null=True)
+	is_commercial = models.NullBooleanField(null=True)
 	business = models.CharField(max_length=30,null=True)
 	num_of_buildings = models.PositiveIntegerField(null=True)
-	is_residential = models.BooleanField(null=True)
+	is_residential = models.NullBooleanField(null=True)
 	residence_type = models.CharField(max_length=30, null=True)
 
 	def __str__(self):
