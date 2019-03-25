@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', IndexView.as_view(), name = 'global_listing'),
     path('<int:pk>/', ListingDetailView.as_view(), name='listing-detail'),
-    path('post/', post, name = 'post'),
+    path('post/', ListingCreateView.as_view(), name = 'listing-create'),
     
 ]
 

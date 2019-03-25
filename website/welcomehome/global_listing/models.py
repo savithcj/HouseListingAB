@@ -7,7 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 # https://docs.djangoproject.com/en/2.1/ref/models/fields/#model-field-types
 
 class UserProfile(models.Model):
-	user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
+	user = models.OneToOneField(User, related_name='user_profile', on_delete=models.DO_NOTHING)
 	email = models.CharField(max_length=30)
 	phone_day = PhoneNumberField()
 	phone_alt = PhoneNumberField(null=True, blank=True)
