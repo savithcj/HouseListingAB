@@ -1,16 +1,20 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import *
+from .forms import PostForm
+from django.views.generic.edit import FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.template import loader
 from django.urls import reverse
 from django.db.models import Q
 
 ##### imports for image upload
-from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import modelformset_factory
-from .forms import *
+# from django.contrib import messages
+# from django.http import HttpResponseRedirect
+
+# from django.forms import modelformset_factory
+# from .forms import *
 
 
 class IndexView(generic.ListView):
@@ -42,8 +46,9 @@ class ListingDetailView(generic.DetailView):
 #https://stackoverflow.com/questions/5720287/django-how-to-make-a-form-for-a-models-foreign-keys
 #https://stackoverflow.com/questions/10382838/how-to-set-foreignkey-in-createview/10565744#10565744
 class ListingCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = 'global_listing/property_form.html'
     model = Property
-    fields = ['post_title', 'description']
+    form_class = PostForm
 
     def form_valid(self, form):
         form.instance.user = self.request.user.user_profile
