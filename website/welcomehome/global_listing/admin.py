@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Property, PropertyImages, RoomSpace
+from .models import Property, PropertyImages, RoomSpace, UserProfile
 
 # Register your models here.
 
@@ -8,6 +8,8 @@ class PropertyImagesAdmin(admin.StackedInline):
     
 class PropertyRoomsAdmin(admin.StackedInline):
     model = RoomSpace
+
+admin.site.register(UserProfile)
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):

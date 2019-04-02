@@ -12,6 +12,9 @@ class UserProfile(models.Model):
 	phone_day = PhoneNumberField()
 	phone_alt = PhoneNumberField(null=True, blank=True)
 
+	def __str__(self):
+    		return self.user.username
+
 class Property(models.Model):
 	property_id = models.AutoField(primary_key=True)
 	user = models.ForeignKey(UserProfile, related_name='property_user', on_delete=models.DO_NOTHING)
