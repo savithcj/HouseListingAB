@@ -12,4 +12,5 @@ List of installed dependencies(* means optional): not complete
 	<li>django-phonenumber-field</li>
 	<li>phonenumbers</li>
 	<li>Pillow</li>
+	<li>crispy-forms</li>
 </ul>
