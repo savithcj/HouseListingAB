@@ -11,13 +11,12 @@ class RoomSpaceMixin(forms.ModelForm):
 
 class PostForm(forms.ModelForm):
 
-    post_title = forms.CharField(max_length=128, required=True, help_text="Catchy decriptive title for your posting", initial="")
-    description = forms.CharField(max_length=2450, required=True, help_text="Describe your home in a paragraph", initial="My beautiful home up for sale has...")
+    post_title = forms.CharField(max_length=128, required=True, widget=forms.TextInput(attrs={'placeholder':'a catchy descriptive title'}))
+    description = forms.CharField(max_length=2450, required=True, widget=forms.Textarea(attrs={'placeholder':"My beautiful home up for sale has...",'rows': 4, 'cols': 25}))
     price = forms.FloatField(required=True)
     above_grade_sqft = forms.FloatField(required=True)
     lot_size = forms.FloatField(required=False)
-    is_commercial = forms.BooleanField(required=False)
-
+    is_residential = forms.BooleanField(required=False)
     OPTIONS = (
             ("House", "House"),
             ("Duplex", "Duplex"),
@@ -27,14 +26,13 @@ class PostForm(forms.ModelForm):
             ("Mobile", "Mobile")
             )
     residence_type = forms.TypedMultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS)
+    is_commercial = forms.BooleanField(required=False)
+    num_of_buildings = forms.IntegerField(required=False)
 
     class Meta:
         model = Property
-        fields = ('post_title', 'description', 'price', 'above_grade_sqft', 'lot_size', 'is_commercial', 'residence_type')
-        widgets = {
-            'post_title': forms.TextInput(attrs={'class':'form-control'}),
-            'description': forms.TextInput(attrs={'class':'form-control'}),
-        }
+        fields = ('post_title','description','price','above_grade_sqft','lot_size','is_residential','residence_type','is_commercial','num_of_buildings')
+        
 
 class ImageForm(forms.ModelForm):
     image = forms.ImageField(label='Image')
