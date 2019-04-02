@@ -50,6 +50,10 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
     model = Property
     form_class = PostForm
 
+    def get(self, request):
+        form = PostForm()
+        return render(request, self.template_name, {'form':form})
+
     def form_valid(self, form):
         form.instance.user = self.request.user.user_profile
         return super().form_valid(form)

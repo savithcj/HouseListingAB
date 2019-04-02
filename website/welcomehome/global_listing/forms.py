@@ -12,7 +12,7 @@ class RoomSpaceMixin(forms.ModelForm):
 class PostForm(forms.ModelForm):
 
     post_title = forms.CharField(max_length=128, required=True, widget=forms.TextInput(attrs={'placeholder':'a catchy descriptive title'}))
-    description = forms.CharField(max_length=2450, required=True, widget=forms.Textarea(attrs={'placeholder':"My beautiful home up for sale has...",'rows': 4, 'cols': 25}))
+    description = forms.CharField(max_length=2450, required=True, widget=forms.Textarea(attrs={'placeholder':"My beautiful home up for sale has...",'rows': 6, 'cols': 50}))
     price = forms.FloatField(required=True)
     above_grade_sqft = forms.FloatField(required=True)
     lot_size = forms.FloatField(required=False)
