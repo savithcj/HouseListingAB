@@ -1,20 +1,36 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import *
-from .forms import PostForm
+from .forms import *
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.template import loader
 from django.urls import reverse
 from django.db.models import Q
+from django.db import transaction
+from django.urls import reverse_lazy
 
-##### imports for image upload
-# from django.contrib import messages
-# from django.http import HttpResponseRedirect
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
 
-# from django.forms import modelformset_factory
-# from .forms import *
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            p = user.user_profile
+            p.email = form.cleaned_data.get('email')
+            p.phone_day = form.cleaned_data.get('phone_day')
+            p.save()
+            # raw_password = form.cleaned_data.get('password1')
+            # user = authenticate(username=user.username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+    return render(request, 'signup.html', {'form': form})
 
 
 class IndexView(generic.ListView):
@@ -39,53 +55,76 @@ class ListingDetailView(generic.DetailView):
     model = Property
     template_name = "global_listing/listing_detail.html"
     
-    # DetailView generic view uses a template called <app name>/<model name>_detail.html by default, unless overwritten by template_name
-    # generic view expects the primary key value captured from the URL to be called 'pk', which is implemented in urls.py
 
-
-#https://stackoverflow.com/questions/5720287/django-how-to-make-a-form-for-a-models-foreign-keys
-#https://stackoverflow.com/questions/10382838/how-to-set-foreignkey-in-createview/10565744#10565744
 class ListingCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = 'global_listing/property_form.html'
     model = Property
     form_class = PostForm
+    success_url = None
 
-    def get(self, request):
-        form = PostForm()
-        return render(request, self.template_name, {'form':form})
+    def get_context_data(self, **kwargs):
+        context = super(ListingCreateView, self).get_context_data(**kwargs)
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user.user_profile
-        return super().form_valid(form)
+        if hasattr(self, 'object') and self.object is not None:
+            if self.request.POST:
+                context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
+            else:
+                context['room_form'] = RoomSpaceFormSet(instance=self.object)
+        else:
+            if self.request.POST:
+                context['room_form'] = RoomSpaceFormSet(self.request.POST)
+            else:
+                context['room_form'] = RoomSpaceFormSet()
 
-
-# # ############### image upload
-
-# def post(request):
-#     ImageFormSet = modelformset_factory(PropertyImages, form=ImageForm)
-
-#     if request.method == 'POST':
-#         postForm = PostForm(request.POST)
-#         formset = ImageFormSet(request.POST, request.FILES, queryset=PropertyImages.objects.none())
-
-#         if postForm.is_valid() and formset.is_valid():
-#             post_form = postForm.save(commit=False)
-#             post_form.user = request.user
-#             post_form.save()
-
-#             for form in formset.cleaned_data:
-#                 if form:
-#                     image=form['image']
-#                     photo=PropertyImages(post=post_form, image=image)
-#                     photo.save()
-#             messages.success(request,"Upload success!")
-#             return HttpResponseRedirect("/")
-
-#         else:
-#             print(postForm.errors, formset.errors)
         
-#     else:
-#         postForm = PostForm()
-#         formset = ImageFormSet(queryset=PropertyImages.objects.none())
-#     return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset, 'property_instance': instance})
-    
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        
+        if form.is_valid():
+            self.object = form.save()
+            room_form = self.get_context_data()['room_form']
+            if room_form.is_valid():
+                return self.form_valid(form, room_form)
+            else:
+                self.object.delete()
+                self.object = None
+                return self.form_invalid(form, room_form)
+        else:
+            return self.form_invalid(form, None)
+
+    def form_invalid(self, form, room_form):
+        print(form.errors,room_form.errors)
+        return super(ListingCreateView, self).form_invalid(form)
+
+    def form_valid(self, form, room_form):
+        self.object.created_by = self.request.user
+        self.object.updated_by = self.request.user
+        self.object.save()
+        # self.object = form.save()
+        room_form.save()
+
+        # with transaction.atomic():
+            # if room_form.is_valid():
+            #     room_form.property_id = self.object
+            #     room_form.save()
+
+        return super(ListingCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('listing_detail', kwargs={'pk': self.object.pk})
+
+    # def get(self, request):
+    #     form = PostForm()
+    #     return render(request, self.template_name, {'form':form})
+
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user.user_profile
+    #     return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        current_kwargs = super(ListingCreateView, self).get_form_kwargs()
+        current_kwargs['user_instance'] = self.request.user
+
+        return current_kwargs

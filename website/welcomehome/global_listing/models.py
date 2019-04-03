@@ -1,34 +1,39 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
-
-# https://docs.djangoproject.com/en/2.1/topics/db/models/
-# https://docs.djangoproject.com/en/2.1/ref/models/fields/#model-field-types
+from datetime import datetime
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name='user_profile', on_delete=models.DO_NOTHING)
-	email = models.CharField(max_length=30)
+	# email = models.CharField(max_length=30)
 	phone_day = PhoneNumberField()
 	phone_alt = PhoneNumberField(null=True, blank=True)
 
-	def __str__(self):
-    		return self.user.username
+
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+	if created:
+		UserProfile.objects.create(user=instance)
+	instance.user_profile.save()
+
 
 class Property(models.Model):
 	property_id = models.AutoField(primary_key=True)
-	user = models.ForeignKey(UserProfile, related_name='property_user', on_delete=models.DO_NOTHING)
+	user = models.ForeignKey(UserProfile, related_name='property_user', on_delete=models.DO_NOTHING,blank=True)
 	is_active = models.BooleanField(default=True)
 	price = models.PositiveIntegerField(null=True)
 	list_date = models.DateField(auto_now=False, auto_now_add=True)
 	above_grade_sqft = models.PositiveIntegerField(null=True)
 	lot_size = models.PositiveIntegerField(null=True)
 	post_title = models.CharField(max_length=128, null=True)
-	post_priority = models.IntegerField(default=1)	# 0: featured, > 0: regular priority
+	post_priority = models.IntegerField(default=1,blank=True)	# 0: featured, > 0: regular priority
 	description = models.CharField(max_length=2450)
 	is_commercial = models.NullBooleanField(null=True)
-	business = models.CharField(max_length=30,null=True)
-	num_of_buildings = models.PositiveIntegerField(null=True)
+	business = models.CharField(max_length=30,null=True,blank=True)
+	num_of_buildings = models.PositiveIntegerField(null=True,blank=True)
 	is_residential = models.NullBooleanField(null=True)
 	residence_type = models.CharField(max_length=30, null=True)
 
@@ -45,11 +50,9 @@ class Property(models.Model):
 		images = self.property_image.all()
 		return images
 
-
-	
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.DO_NOTHING)
-	room_id = models.PositiveIntegerField()
+	room_id = models.PositiveIntegerField(primary_key=True)
 	name = models.CharField(max_length=30)
 	description = models.CharField(max_length=30)
 	ceiling_heights = models.FloatField()
@@ -59,17 +62,17 @@ class RoomSpace(models.Model):
 	size = models.FloatField()
 
 class RoomType(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='property_room_type', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='property_room_type', on_delete=models.DO_NOTHING)
 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
 	room_type = models.CharField(max_length=30)
 
 class RoomDimension(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
 	dimension = models.FloatField()
 
 class RoomFlooring(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
 	flooring = models.CharField(max_length=30)
 
@@ -89,9 +92,9 @@ class PropertyAddress(models.Model):
 # https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
 # https://www.geeksforgeeks.org/python-uploading-images-in-django/
 def get_image_filename(instance, filename):
-	title = str(instance.property_id) + str(instance.property_id.address) + '/%Y/%m/%D'
+	title = str(instance.property_id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
 	slug = slugify(title)
-	return f"{slug}"
+	return f"{str(instance.property_id)}/{slug}"
 
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='property_image', null=True, on_delete=models.DO_NOTHING)
@@ -100,11 +103,3 @@ class PropertyImages(models.Model):
 
 	def image_path(self):
 		return get_image_filename
-
-
-def edit_property(request, prop_id):
-	prop_instance = get_object_or_404(Property, id=prop_id)
-
-	print(prop_instance.propertyimages_property_id.all())
-
-	return render()
