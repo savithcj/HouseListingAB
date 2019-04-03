@@ -3,9 +3,6 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 
-# https://docs.djangoproject.com/en/2.1/topics/db/models/
-# https://docs.djangoproject.com/en/2.1/ref/models/fields/#model-field-types
-
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name='user_profile', on_delete=models.DO_NOTHING)
 	email = models.CharField(max_length=30)
@@ -42,8 +39,6 @@ class Property(models.Model):
 		images = self.property_image.all()
 		return images
 
-
-	
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.DO_NOTHING)
 	room_id = models.PositiveIntegerField()
@@ -56,17 +51,17 @@ class RoomSpace(models.Model):
 	size = models.FloatField()
 
 class RoomType(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='property_room_type', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='property_room_type', on_delete=models.DO_NOTHING)
 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
 	room_type = models.CharField(max_length=30)
 
 class RoomDimension(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
 	dimension = models.FloatField()
 
 class RoomFlooring(models.Model):
-	property_id = models.ForeignKey(RoomSpace, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
 	flooring = models.CharField(max_length=30)
 
@@ -97,11 +92,3 @@ class PropertyImages(models.Model):
 
 	def image_path(self):
 		return get_image_filename
-
-
-def edit_property(request, prop_id):
-	prop_instance = get_object_or_404(Property, id=prop_id)
-
-	print(prop_instance.propertyimages_property_id.all())
-
-	return render()
