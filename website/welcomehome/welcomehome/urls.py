@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
+from global_listing import views
 
 
 urlpatterns = [
@@ -25,5 +26,5 @@ urlpatterns = [
     path('global_listing/', include('global_listing.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
-    
+    path('signup/', views.signup, name='signup'),
 ]

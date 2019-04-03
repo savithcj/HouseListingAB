@@ -11,13 +11,26 @@ from django.db.models import Q
 from django.db import transaction
 from django.urls import reverse_lazy
 
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
 
-##### imports for image upload
-# from django.contrib import messages
-# from django.http import HttpResponseRedirect
-
-# from django.forms import modelformset_factory
-# from .forms import *
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            p = user.user_profile
+            p.email = form.cleaned_data.get('email')
+            p.phone_day = form.cleaned_data.get('phone_day')
+            p.save()
+            # raw_password = form.cleaned_data.get('password1')
+            # user = authenticate(username=user.username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+    return render(request, 'signup.html', {'form': form})
 
 
 class IndexView(generic.ListView):
@@ -52,35 +65,50 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs):
         context = super(ListingCreateView, self).get_context_data(**kwargs)
 
-        if self.request.POST:
-            context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
+        if hasattr(self, 'object') and self.object is not None:
+            if self.request.POST:
+                context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
+            else:
+                context['room_form'] = RoomSpaceFormSet(instance=self.object)
         else:
-            context['room_form'] = RoomSpaceFormSet(instance=self.object)
+            if self.request.POST:
+                context['room_form'] = RoomSpaceFormSet(self.request.POST)
+            else:
+                context['room_form'] = RoomSpaceFormSet()
+
+        
         return context
 
-    # def post(self, request, *args, **kwargs):
-    #     form = self.get_form()
-    #     formset = PostForm(request.POST, prefix='property_id')
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
         
-    #     if form.is_valid() and formset.is_valid():
-    #         return self.form_valid(form)
-    #     else:
-    #         return self.form_invalid(form)
-
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        room_form = context['room_form']
-
-        with transaction.atomic():
-
-            form.instance.created_by = self.request.user
-            form.instance.updated_by = self.request.user
+        if form.is_valid():
             self.object = form.save()
-
+            room_form = self.get_context_data()['room_form']
             if room_form.is_valid():
-                room_form.instance = self.object
-                room_form.save()
+                return self.form_valid(form, room_form)
+            else:
+                self.object.delete()
+                self.object = None
+                return self.form_invalid(form, room_form)
+        else:
+            return self.form_invalid(form, None)
+
+    def form_invalid(self, form, room_form):
+        print(form.errors,room_form.errors)
+        return super(ListingCreateView, self).form_invalid(form)
+
+    def form_valid(self, form, room_form):
+        self.object.created_by = self.request.user
+        self.object.updated_by = self.request.user
+        self.object.save()
+        # self.object = form.save()
+        room_form.save()
+
+        # with transaction.atomic():
+            # if room_form.is_valid():
+            #     room_form.property_id = self.object
+            #     room_form.save()
 
         return super(ListingCreateView, self).form_valid(form)
 
@@ -95,3 +123,8 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
     #     form.instance.user = self.request.user.user_profile
     #     return super().form_valid(form)
 
+    def get_form_kwargs(self):
+        current_kwargs = super(ListingCreateView, self).get_form_kwargs()
+        current_kwargs['user_instance'] = self.request.user
+
+        return current_kwargs

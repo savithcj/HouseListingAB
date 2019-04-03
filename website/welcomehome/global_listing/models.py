@@ -1,29 +1,39 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 from datetime import datetime
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name='user_profile', on_delete=models.DO_NOTHING)
-	email = models.CharField(max_length=30)
+	# email = models.CharField(max_length=30)
 	phone_day = PhoneNumberField()
 	phone_alt = PhoneNumberField(null=True, blank=True)
 
+
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+	if created:
+		UserProfile.objects.create(user=instance)
+	instance.user_profile.save()
+
+
 class Property(models.Model):
 	property_id = models.AutoField(primary_key=True)
-	user = models.ForeignKey(UserProfile, related_name='property_user', on_delete=models.DO_NOTHING)
+	user = models.ForeignKey(UserProfile, related_name='property_user', on_delete=models.DO_NOTHING,blank=True)
 	is_active = models.BooleanField(default=True)
 	price = models.PositiveIntegerField(null=True)
 	list_date = models.DateField(auto_now=False, auto_now_add=True)
 	above_grade_sqft = models.PositiveIntegerField(null=True)
 	lot_size = models.PositiveIntegerField(null=True)
 	post_title = models.CharField(max_length=128, null=True)
-	post_priority = models.IntegerField(default=1)	# 0: featured, > 0: regular priority
+	post_priority = models.IntegerField(default=1,blank=True)	# 0: featured, > 0: regular priority
 	description = models.CharField(max_length=2450)
 	is_commercial = models.NullBooleanField(null=True)
-	business = models.CharField(max_length=30,null=True)
-	num_of_buildings = models.PositiveIntegerField(null=True)
+	business = models.CharField(max_length=30,null=True,blank=True)
+	num_of_buildings = models.PositiveIntegerField(null=True,blank=True)
 	is_residential = models.NullBooleanField(null=True)
 	residence_type = models.CharField(max_length=30, null=True)
 
@@ -42,7 +52,7 @@ class Property(models.Model):
 
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.DO_NOTHING)
-	room_id = models.PositiveIntegerField()
+	room_id = models.PositiveIntegerField(primary_key=True)
 	name = models.CharField(max_length=30)
 	description = models.CharField(max_length=30)
 	ceiling_heights = models.FloatField()
