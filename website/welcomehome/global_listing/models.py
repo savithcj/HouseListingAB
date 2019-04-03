@@ -2,6 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
+from datetime import datetime
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name='user_profile', on_delete=models.DO_NOTHING)
@@ -81,9 +82,9 @@ class PropertyAddress(models.Model):
 # https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
 # https://www.geeksforgeeks.org/python-uploading-images-in-django/
 def get_image_filename(instance, filename):
-	title = str(instance.property_id) + str(instance.property_id.address) + '/%Y/%m/%D'
+	title = str(instance.property_id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
 	slug = slugify(title)
-	return f"{slug}"
+	return f"{str(instance.property_id)}/{slug}"
 
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='property_image', null=True, on_delete=models.DO_NOTHING)

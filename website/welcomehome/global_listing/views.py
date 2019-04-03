@@ -58,13 +58,15 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
             context['room_form'] = RoomSpaceFormSet(instance=self.object)
         return context
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        formset = PostForm(request.POST, prefix='property_id')
-        if form.is_valid() and formset.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    # def post(self, request, *args, **kwargs):
+    #     form = self.get_form()
+    #     formset = PostForm(request.POST, prefix='property_id')
+        
+    #     if form.is_valid() and formset.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         return self.form_invalid(form)
+
 
     def form_valid(self, form):
         context = self.get_context_data()

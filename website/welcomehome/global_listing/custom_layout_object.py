@@ -7,7 +7,7 @@ class Formset(LayoutObject):
 
     def __init__(self, formset_name_in_context, template=None):
         self.formset_name_in_context = formset_name_in_context
-        self.fields = []
+        self.fields = ['propert_id','room_id','name','description','ceiling_heights','is_insulated','num_of_windows','fireplace','size']
         if template:
             self.template = template
 

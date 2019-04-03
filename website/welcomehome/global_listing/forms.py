@@ -55,6 +55,7 @@ class PostForm(forms.ModelForm):
         self.helper.field_class = 'col-md-9'
         self.helper.layout = Layout(
             Div(
+                Field('property_id', type='hidden'),
                 Field('post_title'),
                 Field('price'),
                 Field('residence_type'),
@@ -70,7 +71,6 @@ class PostForm(forms.ModelForm):
                 ButtonHolder(Submit('submit', 'save')),
                 )
             )
-
 
 
 class ImageForm(forms.ModelForm):
