@@ -22,19 +22,19 @@ def update_user_profile(sender, instance, created, **kwargs):
 class Property(models.Model):
 	property_id = models.AutoField(primary_key=True)
 	user = models.ForeignKey(UserProfile, related_name='property_user', on_delete=models.DO_NOTHING,blank=True)
-	is_active = models.BooleanField(default=True)
-	price = models.PositiveIntegerField(null=True)
+	is_active = models.BooleanField(default=True, null=False, blank=True)
+	price = models.PositiveIntegerField(null=False, blank=False)
 	list_date = models.DateField(auto_now=False, auto_now_add=True)
-	above_grade_sqft = models.PositiveIntegerField(null=True)
-	lot_size = models.PositiveIntegerField(null=True)
+	above_grade_sqft = models.PositiveIntegerField(null=True, blank=True)
+	lot_size = models.PositiveIntegerField(null=True, blank=True)
 	post_title = models.CharField(max_length=128, null=True)
-	post_priority = models.IntegerField(default=1,blank=True)	# 0: featured, > 0: regular priority
-	description = models.CharField(max_length=2450)
-	is_commercial = models.NullBooleanField(null=True)
-	business = models.CharField(max_length=30,null=True,blank=True)
-	num_of_buildings = models.PositiveIntegerField(null=True,blank=True)
-	is_residential = models.NullBooleanField(null=True)
-	residence_type = models.CharField(max_length=30, null=True)
+	post_priority = models.IntegerField(default=1, blank=True)	# 0: featured, > 0: regular priority
+	description = models.CharField(max_length=2450, null=True, blank=True)
+	is_commercial = models.NullBooleanField(null=True, blank=True)
+	business = models.CharField(max_length=30, null=True, blank=True)
+	num_of_buildings = models.PositiveIntegerField(null=True, blank=True)
+	is_residential = models.NullBooleanField(null=True, blank=True)
+	residence_type = models.CharField(max_length=30, null=True, blank=True)
 
 	def __str__(self):
 		return str(self.property_id) 
@@ -50,29 +50,26 @@ class Property(models.Model):
 
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.DO_NOTHING)
-	# room_id = models.IntegerField(primary_key=True)
-	name = models.CharField(max_length=30)
-	description = models.CharField(max_length=30)
-	ceiling_heights = models.FloatField()
-	is_insulated = models.BooleanField()
-	num_of_windows = models.PositiveIntegerField()
-	fireplace = models.BooleanField()
-	size = models.FloatField()
+	name = models.CharField(max_length=30, null=True, blank=True)
+	description = models.CharField(max_length=30, null=True, blank=True)
+	ceiling_heights = models.FloatField(null=True, blank=True)
+	is_insulated = models.BooleanField(null=True, blank=True)
+	num_of_windows = models.PositiveIntegerField(null=True, blank=True)
+	fireplace = models.BooleanField(null=True, blank=True)
+	size = models.FloatField(null=True, blank=True)
 
-# class RoomType(models.Model):
-# 	property_id = models.ForeignKey(Property, related_name='property_room_type', on_delete=models.DO_NOTHING)
-# 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
-# 	room_type = models.CharField(max_length=30)
+class RoomType(models.Model):
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
+	room_type = models.CharField(max_length=30, null=True, blank=True)
 
-# class RoomDimension(models.Model):
-# 	property_id = models.ForeignKey(Property, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
-# 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
-# 	dimension = models.FloatField()
+class RoomDimension(models.Model):
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
+	dimension1 = models.FloatField(null=True, blank=True)
+	dimension2 = models.FloatField(null=True, blank=True)
 
-# class RoomFlooring(models.Model):
-# 	property_id = models.ForeignKey(Property, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
-# 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
-# 	flooring = models.CharField(max_length=30)
+class RoomFlooring(models.Model):
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
+	flooring = models.CharField(max_length=30, null=True, blank=True)
 
 class PropertyAddress(models.Model):
 	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.DO_NOTHING)
@@ -90,8 +87,8 @@ def get_image_filename(instance, filename):
 	return f"{str(instance.property_id)}/{slug}"
 
 class PropertyImages(models.Model):
-	property_id = models.ForeignKey(Property, related_name='property_image', null=True, on_delete=models.DO_NOTHING)
-	title = models.CharField(max_length=25)
+	property_id = models.ForeignKey(Property, related_name='property_image', on_delete=models.DO_NOTHING)
+	title = models.CharField(max_length=25, null=True, blank=True)
 	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
 
 	def image_path(self):

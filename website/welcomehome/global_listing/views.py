@@ -64,17 +64,7 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
             context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
         else:
             context['room_form'] = RoomSpaceFormSet(instance=self.object)
-        # if hasattr(self, 'object') and self.object is not None:
-        #     if self.request.POST:
-        #         context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
-        #     else:
-        #         context['room_form'] = RoomSpaceFormSet(instance=self.object)
-        # else:
-        #     if self.request.POST:
-        #         context['room_form'] = RoomSpaceFormSet(self.request.POST)
-        #     else:
-        #         context['room_form'] = RoomSpaceFormSet()
-
+        
         return context
 
     def post(self, request, *args, **kwargs):

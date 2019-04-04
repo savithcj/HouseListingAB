@@ -44,7 +44,8 @@ class PostForm(forms.ModelForm):
             ("Townhouse", "Townhouse"),
             ("Highrise", "Highrise"),
             ("Lowrise", "Lowrise"),
-            ("Mobile", "Mobile")
+            ("Mobile", "Mobile"),
+            ("Hut", "Hut"),
             )
     residence_type = forms.TypedMultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS)
     is_commercial = forms.BooleanField(required=False)
