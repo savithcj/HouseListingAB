@@ -59,20 +59,20 @@ class RoomSpace(models.Model):
 	fireplace = models.BooleanField()
 	size = models.FloatField()
 
-# class RoomType(models.Model):
-# 	property_id = models.ForeignKey(Property, related_name='property_room_type', on_delete=models.DO_NOTHING)
-# 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
-# 	room_type = models.CharField(max_length=30)
+class RoomType(models.Model):
+	property_id = models.ForeignKey(Property, related_name='property_room_type', on_delete=models.DO_NOTHING)
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
+	room_type = models.CharField(max_length=30)
 
-# class RoomDimension(models.Model):
-# 	property_id = models.ForeignKey(Property, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
-# 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
-# 	dimension = models.FloatField()
+class RoomDimension(models.Model):
+	property_id = models.ForeignKey(Property, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
+	dimension = models.FloatField()
 
-# class RoomFlooring(models.Model):
-# 	property_id = models.ForeignKey(Property, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
-# 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
-# 	flooring = models.CharField(max_length=30)
+class RoomFlooring(models.Model):
+	property_id = models.ForeignKey(Property, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
+	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
+	flooring = models.CharField(max_length=30)
 
 class PropertyAddress(models.Model):
 	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.DO_NOTHING)
