@@ -1,11 +1,8 @@
 from rest_framework import viewsets, permissions
 
-from global_listing.models import UserProfile, Property, PropertyImages, \
-    RoomSpace, RoomType, RoomDimension, RoomFlooring, PropertyAddress
+from global_listing.models import *
 
-from .serializers import UserProfileSerializer, PropertySerializer, \
-    PropertyImageSerializer, RoomSpaceSerializer, RoomTypeSerializer, \
-    RoomDimensionSerializer, RoomFlooringSerializer, PropertyAddressSerializer
+from .serializers import *
 
 #A viewset allows to create a full CRUD API without having to 
 #specify explicit methods for functionality
@@ -38,27 +35,6 @@ class RoomSpaceViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = RoomSpaceSerializer
-
-class RoomTypeViewSet(viewsets.ModelViewSet):
-    queryset = RoomType.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = RoomTypeSerializer
-
-class RoomDimensionViewSet(viewsets.ModelViewSet):
-    queryset = RoomDimension.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = RoomDimensionSerializer
-
-class RoomFlooringViewSet(viewsets.ModelViewSet):
-    queryset = RoomFlooring.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = RoomFlooringSerializer
 
 class PropertyAddressViewSet(viewsets.ModelViewSet):
     queryset = PropertyAddress.objects.all()

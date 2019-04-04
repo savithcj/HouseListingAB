@@ -22,11 +22,11 @@ class RoomSpaceForm(forms.ModelForm):
 
     class Meta:
         model = RoomSpace
-        exclude = ('property_id','room_id')
+        exclude = ('property_id',)
 
 RoomSpaceFormSet = inlineformset_factory(
     Property, RoomSpace, form=RoomSpaceForm,
-    fields=['name','description','ceiling_heights','is_insulated','num_of_windows','fireplace','size'], 
+    fields=['name','description','ceiling_heights','is_insulated','num_of_windows','fireplace','sqft'], 
     extra=1,can_delete=True, can_order=True,
     max_num=30,
 )

@@ -8,7 +8,7 @@ from datetime import datetime
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name='user_profile', on_delete=models.DO_NOTHING)
-	phone_day = PhoneNumberField()
+	phone_day = PhoneNumberField(null=True, blank=True)
 	phone_alt = PhoneNumberField(null=True, blank=True)
 
 
@@ -20,7 +20,6 @@ def update_user_profile(sender, instance, created, **kwargs):
 
 
 class Property(models.Model):
-	property_id = models.AutoField(primary_key=True)
 	user = models.ForeignKey(UserProfile, related_name='property_user', on_delete=models.DO_NOTHING,blank=True)
 	is_active = models.BooleanField(default=True, null=False, blank=True)
 	price = models.PositiveIntegerField(null=False, blank=False)
@@ -37,11 +36,11 @@ class Property(models.Model):
 	residence_type = models.CharField(max_length=30, null=True, blank=True)
 
 	def __str__(self):
-		return str(self.property_id) 
+		return str(self.id) 
 
 	def save(self, *args, **kwargs):
 		if self.post_title is None:
-			self.post_title = PropertyAddress.objects.get(property_id=self.property_id)
+			self.post_title = PropertyAddress.objects.get(id=self.id)
 		super(Property, self).save(*args, **kwargs)
 
 	def image_paths(self):
@@ -52,31 +51,25 @@ class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.DO_NOTHING)
 	name = models.CharField(max_length=30, null=True, blank=True)
 	description = models.CharField(max_length=30, null=True, blank=True)
+	floor_level = models.FloatField(default=1, null=True, blank=True) # 0-basement, 1-first floor, 2-second floor, etc
 	ceiling_heights = models.FloatField(null=True, blank=True)
 	is_insulated = models.BooleanField(null=True, blank=True)
 	num_of_windows = models.PositiveIntegerField(null=True, blank=True)
 	fireplace = models.BooleanField(null=True, blank=True)
-	size = models.FloatField(null=True, blank=True)
-
-class RoomType(models.Model):
-	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
-	room_type = models.CharField(max_length=30, null=True, blank=True)
-
-class RoomDimension(models.Model):
-	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
-	dimension1 = models.FloatField(null=True, blank=True)
-	dimension2 = models.FloatField(null=True, blank=True)
-
-class RoomFlooring(models.Model):
-	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
-	flooring = models.CharField(max_length=30, null=True, blank=True)
+	sqft = models.FloatField(null=True, blank=True)
+	dimA = models.FloatField(null=True, blank=True)
+	dimB = models.FloatField(null=True, blank=True)
+	shape = models.PositiveIntegerField(default=0, null=True, blank=True)	# 0-square/rectangle, 1-round, 2-irregular, 3-other
+	flooring = models.PositiveIntegerField(default=0, null=True, blank=True) # 0-carpet, 1-laminate, 2-wood, 3-wood/polymer composite, 4-vinyl, 5-painted concrete, 6-unfinished concrete, 7-other
 
 class PropertyAddress(models.Model):
 	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.DO_NOTHING)
-	street = models.CharField(max_length=200)
-	city = models.CharField(max_length=200)
-	province = models.CharField(max_length=25)
-	postal = models.CharField(max_length=7)
+	street = models.CharField(max_length=200, null=False, blank=False)
+	city = models.CharField(max_length=200, null=False, blank=False)
+	province = models.CharField(max_length=25, default='AB', null=False, blank=False)
+	postal = models.CharField(max_length=7, null=True, blank=True)
+	intercom = models.PositiveIntegerField(null=True, blank=True)
+	tel = PhoneNumberField(null=True, blank=True)
 
 	def __str__(self):
 		return str(self.street)

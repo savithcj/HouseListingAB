@@ -13,8 +13,7 @@ urlpatternsOriginal = [
 
 #API urls:
 from rest_framework import routers
-from .api import UserProfileViewSet, PropertyViewSet, PropertyImageViewSet, RoomSpaceViewSet, \
-    RoomTypeViewSet, RoomDimensionViewSet, RoomFlooringViewSet, PropertyAddressViewSet
+from .api import *
 
 
 router = routers.DefaultRouter()
@@ -22,9 +21,6 @@ router.register('api/userprofile', UserProfileViewSet, 'userprofile')
 router.register('api/property', PropertyViewSet, 'property')
 router.register('api/propertyimage', PropertyImageViewSet, 'propertyimage')
 router.register('api/roomspace', RoomSpaceViewSet, 'roomspace')
-router.register('api/roomtype', RoomTypeViewSet, 'roomtype')
-router.register('api/roomdimension', RoomDimensionViewSet, 'roomdimension')
-router.register('api/roomflooring', RoomFlooringViewSet, 'roomflooring')
 router.register('api/propertyaddress', PropertyAddressViewSet, 'propertyaddress')
 
 urlpatternsAPI = router.urls
