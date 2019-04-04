@@ -10,6 +10,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
     path('', include('global_listing.urls')),
+    path('', include('frontend.urls')),
     path('global_listing/', include('global_listing.urls')),
     path('signup/', views.signup, name='signup'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
