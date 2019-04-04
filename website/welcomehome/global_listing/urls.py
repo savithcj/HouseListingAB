@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatternsOriginal = [
-    path('', IndexView.as_view(), name = 'global_listing'),
+    path('', IndexView.as_view(), name = 'home'),
     path('<int:pk>/', ListingDetailView.as_view(), name='listing-detail'),
     path('post/', ListingCreateView.as_view(), name = 'listing-create'),
     

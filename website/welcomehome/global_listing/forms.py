@@ -8,10 +8,10 @@ from .models import *
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit
 from .custom_layout_object import *
-
+from phonenumber_field.formfields import PhoneNumberField
 
 class SignUpForm(UserCreationForm):
-    phone_day = forms.CharField(max_length=12, required=True)
+    phone_day = PhoneNumberField(widget=forms.TextInput(attrs={'placeholder': 'Phone'}),label="Phone number", required=False)
 
     class Meta:
         model = User
@@ -22,7 +22,7 @@ class RoomSpaceForm(forms.ModelForm):
 
     class Meta:
         model = RoomSpace
-        exclude = ('property_id',)
+        exclude = ('property_id','room_id')
 
 RoomSpaceFormSet = inlineformset_factory(
     Property, RoomSpace, form=RoomSpaceForm,
@@ -32,7 +32,6 @@ RoomSpaceFormSet = inlineformset_factory(
 )
 
 class PostForm(forms.ModelForm):
-    # user = forms.IntegerField(required=False)
     post_title = forms.CharField(max_length=128, required=True, widget=forms.TextInput(attrs={'placeholder':'a catchy descriptive title'}))
     description = forms.CharField(max_length=2450, required=True, widget=forms.Textarea(attrs={'placeholder':"My beautiful home up for sale has...",'rows': 6, 'cols': 50}))
     price = forms.FloatField(required=True)
@@ -42,7 +41,7 @@ class PostForm(forms.ModelForm):
     OPTIONS = (
             ("House", "House"),
             ("Duplex", "Duplex"),
-            ("Townhouse", "Towhouse"),
+            ("Townhouse", "Townhouse"),
             ("Highrise", "Highrise"),
             ("Lowrise", "Lowrise"),
             ("Mobile", "Mobile")
@@ -53,7 +52,6 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Property
-        # fields = ('post_title','description','price','above_grade_sqft','lot_size','is_residential','residence_type','is_commercial','num_of_buildings')
         exclude = ()
 
     def __init__(self, *args, **kwargs):
