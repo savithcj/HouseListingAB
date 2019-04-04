@@ -8,7 +8,6 @@ from datetime import datetime
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name='user_profile', on_delete=models.DO_NOTHING)
-	# email = models.CharField(max_length=30)
 	phone_day = PhoneNumberField()
 	phone_alt = PhoneNumberField(null=True, blank=True)
 
@@ -46,13 +45,12 @@ class Property(models.Model):
 		super(Property, self).save(*args, **kwargs)
 
 	def image_paths(self):
-		# images = PropertyImages.objects.filter(property_id=self.property_id)
 		images = self.property_image.all()
 		return images
 
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.DO_NOTHING)
-	room_id = models.PositiveIntegerField(primary_key=True)
+	# room_id = models.IntegerField(primary_key=True)
 	name = models.CharField(max_length=30)
 	description = models.CharField(max_length=30)
 	ceiling_heights = models.FloatField()
@@ -61,20 +59,20 @@ class RoomSpace(models.Model):
 	fireplace = models.BooleanField()
 	size = models.FloatField()
 
-class RoomType(models.Model):
-	property_id = models.ForeignKey(Property, related_name='property_room_type', on_delete=models.DO_NOTHING)
-	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
-	room_type = models.CharField(max_length=30)
+# class RoomType(models.Model):
+# 	property_id = models.ForeignKey(Property, related_name='property_room_type', on_delete=models.DO_NOTHING)
+# 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_type', on_delete=models.DO_NOTHING)
+# 	room_type = models.CharField(max_length=30)
 
-class RoomDimension(models.Model):
-	property_id = models.ForeignKey(Property, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
-	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
-	dimension = models.FloatField()
+# class RoomDimension(models.Model):
+# 	property_id = models.ForeignKey(Property, related_name='property_room_dimension', on_delete=models.DO_NOTHING)
+# 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_dimension_rm', on_delete=models.DO_NOTHING)
+# 	dimension = models.FloatField()
 
-class RoomFlooring(models.Model):
-	property_id = models.ForeignKey(Property, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
-	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
-	flooring = models.CharField(max_length=30)
+# class RoomFlooring(models.Model):
+# 	property_id = models.ForeignKey(Property, related_name='property_room_flooring', on_delete=models.DO_NOTHING)
+# 	room_id = models.ForeignKey(RoomSpace, related_name='room_room_flooring', on_delete=models.DO_NOTHING)
+# 	flooring = models.CharField(max_length=30)
 
 class PropertyAddress(models.Model):
 	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.DO_NOTHING)
@@ -86,11 +84,6 @@ class PropertyAddress(models.Model):
 	def __str__(self):
 		return str(self.street)
 
-
-######### Image Upload
-
-# https://stackoverflow.com/questions/34006994/how-to-upload-multiple-images-to-a-blog-post-in-django
-# https://www.geeksforgeeks.org/python-uploading-images-in-django/
 def get_image_filename(instance, filename):
 	title = str(instance.property_id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
 	slug = slugify(title)

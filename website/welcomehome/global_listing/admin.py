@@ -3,23 +3,25 @@ from .models import *
 
 # Register your models here.
 
+admin.site.register(UserProfile)
+
 class PropertyImagesAdmin(admin.StackedInline):
     model = PropertyImages
     
 class PropertyRoomsAdmin(admin.TabularInline):
     model = RoomSpace
 
-class PropertyRoomTypeAdmin(admin.TabularInline):
-    model = RoomType
-    k_name = 'property_id'
+# class PropertyRoomTypeAdmin(admin.TabularInline):
+#     model = RoomType
+#     fk_name = 'property_id'
 
-class PropertyRoomDimensionAdmin(admin.TabularInline):
-    model = RoomDimension
-    fk_name = 'property_id'
+# class PropertyRoomDimensionAdmin(admin.TabularInline):
+#     model = RoomDimension
+#     fk_name = 'property_id'
 
-class PropertyRoomFlooringAdmin(admin.TabularInline):
-    model = RoomFlooring
-    fk_name = 'property_id'
+# class PropertyRoomFlooringAdmin(admin.TabularInline):
+#     model = RoomFlooring
+#     fk_name = 'property_id'
 
 class PropertyAddressAdmin(admin.TabularInline):
     model = PropertyAddress
@@ -31,7 +33,7 @@ class PropertyAdmin(admin.ModelAdmin):
         PropertyAddressAdmin,
         PropertyImagesAdmin,
         PropertyRoomsAdmin,
-        PropertyRoomTypeAdmin,
-        PropertyRoomDimensionAdmin,
-        PropertyRoomFlooringAdmin
+        # PropertyRoomTypeAdmin,
+        # PropertyRoomDimensionAdmin,
+        # PropertyRoomFlooringAdmin
     ]

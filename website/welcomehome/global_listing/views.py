@@ -24,8 +24,6 @@ def signup(request):
             p.email = form.cleaned_data.get('email')
             p.phone_day = form.cleaned_data.get('phone_day')
             p.save()
-            # raw_password = form.cleaned_data.get('password1')
-            # user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             return redirect('home')
     else:
@@ -39,9 +37,6 @@ class IndexView(generic.ListView):
     template_name = 'global_listing/index.html'
     ordering = ['-list_date']
     
-    # ListView uses a template called <app name>/<model name>_list.html by default, unless overwrite by template_name.
-    # For generic ListView, the automatically generated context variable is question_list, unless overwriten by context_object_name
-
     def get_queryset(self):
         return Property.objects.order_by('-list_date')[:10]
 
@@ -65,18 +60,21 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs):
         context = super(ListingCreateView, self).get_context_data(**kwargs)
 
-        if hasattr(self, 'object') and self.object is not None:
-            if self.request.POST:
-                context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
-            else:
-                context['room_form'] = RoomSpaceFormSet(instance=self.object)
+        if self.request.POST:
+            context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
         else:
-            if self.request.POST:
-                context['room_form'] = RoomSpaceFormSet(self.request.POST)
-            else:
-                context['room_form'] = RoomSpaceFormSet()
+            context['room_form'] = RoomSpaceFormSet(instance=self.object)
+        # if hasattr(self, 'object') and self.object is not None:
+        #     if self.request.POST:
+        #         context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
+        #     else:
+        #         context['room_form'] = RoomSpaceFormSet(instance=self.object)
+        # else:
+        #     if self.request.POST:
+        #         context['room_form'] = RoomSpaceFormSet(self.request.POST)
+        #     else:
+        #         context['room_form'] = RoomSpaceFormSet()
 
-        
         return context
 
     def post(self, request, *args, **kwargs):
@@ -102,29 +100,13 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
         self.object.created_by = self.request.user
         self.object.updated_by = self.request.user
         self.object.save()
-        # self.object = form.save()
         room_form.save()
-
-        # with transaction.atomic():
-            # if room_form.is_valid():
-            #     room_form.property_id = self.object
-            #     room_form.save()
-
         return super(ListingCreateView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('listing_detail', kwargs={'pk': self.object.pk})
 
-    # def get(self, request):
-    #     form = PostForm()
-    #     return render(request, self.template_name, {'form':form})
-
-    # def form_valid(self, form):
-    #     form.instance.user = self.request.user.user_profile
-    #     return super().form_valid(form)
-
     def get_form_kwargs(self):
         current_kwargs = super(ListingCreateView, self).get_form_kwargs()
         current_kwargs['user_instance'] = self.request.user
-
         return current_kwargs
