@@ -68,9 +68,10 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        """Check if form is valid, and then calls form_valid to check room_forms"""
         form = self.get_form()
         
-        if form.is_valid():
+        if form.is_valid(): # if form is valid, save before proceeding next to check on room_forms
             self.object = form.save()
             room_form = self.get_context_data()['room_form']
             if room_form.is_valid():
@@ -87,6 +88,7 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
         return super(ListingCreateView, self).form_invalid(form)
 
     def form_valid(self, form, room_form):
+        """Called on if form is valid, saves room_form."""
         self.object.created_by = self.request.user
         self.object.updated_by = self.request.user
         self.object.save()
@@ -94,9 +96,71 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
         return super(ListingCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('listing_detail', kwargs={'pk': self.object.pk})
+        return reverse('listing-detail', kwargs={'pk': self.object.pk})
 
     def get_form_kwargs(self):
         current_kwargs = super(ListingCreateView, self).get_form_kwargs()
+        current_kwargs['user_instance'] = self.request.user
+        return current_kwargs
+
+
+class ListingEditView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'global_listing/property_form.html'
+    model = Property
+    form_class = PostForm
+    pk_url_kwarg = 'pk'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListingEditView, self).get_context_data(**kwargs)
+
+        if self.request.POST:   # form being posted by user
+            print("ckpt 1")
+            context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
+        else:   # form being requested by user
+            print("ckpt 2")
+            context['room_form'] = RoomSpaceFormSet(instance=self.object)
+        
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Check if form is valid, and then calls form_valid to check room_forms"""
+        form = self.get_form()
+        
+        if form.is_valid(): # if form is valid, save before proceeding next to check on room_forms
+            print("ckpt 3")
+            self.object = form.save()
+            room_form = self.get_context_data()['room_form']
+            if room_form.is_valid():
+                print("ckpt 4")
+                return self.form_valid(form, room_form)
+            else:
+                print("ckpt 5")
+                # self.object.delete()
+                # self.object = None
+                return self.form_invalid(form, room_form)
+        else:
+            print("ckpt 6")
+            return self.form_invalid(form, None)
+
+    def form_invalid(self, form, room_form):
+        print("ckpt 7")
+        print(form.errors,room_form.errors)
+        return super(ListingEditView, self).form_invalid(form)
+
+    def form_valid(self, form, room_form):
+        """Called on if form is valid, saves room_form."""
+        print("ckpt 8")
+        self.object.updated_by = self.request.user
+        self.object.save()
+        room_form.save()
+        return super(ListingEditView, self).form_valid(form)
+
+    def get_success_url(self):
+        print("ckpt 9")
+        return reverse('listing-detail', kwargs={'pk': self.object.pk})
+
+    def get_form_kwargs(self):
+        print("ckpt 10")
+        current_kwargs = super(ListingEditView, self).get_form_kwargs()
         current_kwargs['user_instance'] = self.request.user
         return current_kwargs

@@ -75,9 +75,9 @@ class PropertyAddress(models.Model):
 		return str(self.street)
 
 def get_image_filename(instance, filename):
-	title = str(instance.property_id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
+	title = str(instance.id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
 	slug = slugify(title)
-	return f"{str(instance.property_id)}/{slug}"
+	return f"{str(instance.id)}/{slug}"
 
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='property_image', on_delete=models.DO_NOTHING)

@@ -22,7 +22,7 @@ class RoomSpaceForm(forms.ModelForm):
 
     class Meta:
         model = RoomSpace
-        exclude = ('property_id',)
+        exclude = ()
 
 RoomSpaceFormSet = inlineformset_factory(
     Property, RoomSpace, form=RoomSpaceForm,
@@ -47,7 +47,7 @@ class PostForm(forms.ModelForm):
             ("Mobile", "Mobile"),
             ("Hut", "Hut"),
             )
-    residence_type = forms.TypedMultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS)
+    residence_type = forms.TypedMultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS, required=False)
     is_commercial = forms.BooleanField(required=False)
     num_of_buildings = forms.IntegerField(required=False)
 

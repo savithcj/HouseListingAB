@@ -11,7 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
     path('', include('global_listing.urls')),
     path('', include('frontend.urls')),
-    path('global_listing/', include('global_listing.urls')),
+    path('global_listing/', include('global_listing.urls'), name='global_listing'),
     path('signup/', views.signup, name='signup'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
