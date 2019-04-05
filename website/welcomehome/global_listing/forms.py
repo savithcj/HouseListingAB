@@ -20,6 +20,27 @@ class SignUpForm(UserCreationForm):
 
 class RoomSpaceForm(forms.ModelForm):
 
+    shape_options = (
+        (0, "Square/Rectangle"),
+        (1, "Round"),
+        (2, "Irregular"),
+        (3, "Other"),
+    )
+
+    flooring_options = (
+        (0, "Carpet"),
+        (1, "Laminated"),
+        (2, "Hard Wood"),
+        (3, "Wood/Polymer Composite"),
+        (4, "Vinyl"),
+        (5, "Painted/Epoxy"),
+        (6, "Unfinished Concrete"),
+        (7, "Other"),
+    )
+
+    flooring = forms.ChoiceField(choices=flooring_options, required=False)
+    shape = forms.ChoiceField(choices=shape_options, required=False)
+
     class Meta:
         model = RoomSpace
         exclude = ()
@@ -38,7 +59,7 @@ class PostForm(forms.ModelForm):
     above_grade_sqft = forms.FloatField(required=True)
     lot_size = forms.FloatField(required=False)
     is_residential = forms.BooleanField(required=False)
-    OPTIONS = (
+    residence_options = (
             ("House", "House"),
             ("Duplex", "Duplex"),
             ("Townhouse", "Townhouse"),
@@ -47,7 +68,7 @@ class PostForm(forms.ModelForm):
             ("Mobile", "Mobile"),
             ("Hut", "Hut"),
             )
-    residence_type = forms.ChoiceField(choices=OPTIONS, required=False)
+    residence_type = forms.ChoiceField(choices=residence_options, required=False)
     is_commercial = forms.BooleanField(required=False)
     num_of_buildings = forms.IntegerField(required=False)
 

@@ -44,11 +44,16 @@ class Property(models.Model):
 		super(Property, self).save(*args, **kwargs)
 
 	def image_paths(self):
+		# TODO: filter for active postings only
 		images = self.property_image.all()
 		return images
 
+	# TODO: implement method to return contact information: email, phone number
+
+	
+
 class RoomSpace(models.Model):
-	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.CASCADE)
 	name = models.CharField(max_length=30, null=True, blank=True)
 	description = models.CharField(max_length=30, null=True, blank=True)
 	floor_level = models.FloatField(default=1, null=True, blank=True) # 0-basement, 1-first floor, 2-second floor, etc
@@ -63,7 +68,7 @@ class RoomSpace(models.Model):
 	flooring = models.PositiveIntegerField(default=0, null=True, blank=True) # 0-carpet, 1-laminate, 2-wood, 3-wood/polymer composite, 4-vinyl, 5-painted concrete, 6-unfinished concrete, 7-other
 
 class PropertyAddress(models.Model):
-	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.DO_NOTHING)
+	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.CASCADE)
 	street = models.CharField(max_length=200, null=False, blank=False)
 	city = models.CharField(max_length=200, null=False, blank=False)
 	province = models.CharField(max_length=25, default='AB', null=False, blank=False)
@@ -80,7 +85,7 @@ def get_image_filename(instance, filename):
 	return f"{str(instance.id)}/{slug}"
 
 class PropertyImages(models.Model):
-	property_id = models.ForeignKey(Property, related_name='property_image', on_delete=models.DO_NOTHING)
+	property_id = models.ForeignKey(Property, related_name='property_image', on_delete=models.CASCADE)
 	title = models.CharField(max_length=25, null=True, blank=True)
 	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
 
