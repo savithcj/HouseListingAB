@@ -73,6 +73,7 @@ h1,h2,h3,h4,h5,h6 {
         }
 
 .text-box {
+    height: 250px;
     overflow: auto;
     background: rgb(49, 49, 49); /* bluish grey */
     color: #fff; /* steel blue */
@@ -93,6 +94,13 @@ h1,h2,h3,h4,h5,h6 {
         letter-spacing: 0.1em;
         font-size: 12px;
     }
+
+.table-box{
+    height: 400px;
+    overflow: auto;
+    background: rgb(49, 49, 49); 
+    color: #fff; 
+}
 
 .form-box {
     text-align: center;

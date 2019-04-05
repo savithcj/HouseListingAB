@@ -27,12 +27,10 @@
 </head>
 
 <body>
-
-
     <div>
         <div class="header">
             <div class="pure-menu pure-menu-horizontal">
-                <a class="pure-menu-heading" href="">Listing Details</a>
+                <a class="pure-menu-heading" href="{% url 'home' %}">WelcomeHomeAB</a>
 
                 <ul class="pure-menu-list">
                     <li class="pure-menu-item pure-menu-selected"><a href="{% url 'home' %}" class="pure-menu-link">Home</a></li>
@@ -45,7 +43,6 @@
         <!-- this div contains all the info about a posting -->
         <div class="pure-g">
 
-            
             <!-- Displaying title, description and price of the property -->
             <div class="text-box pure-u-1 pure-u-md-1 pure-u-lg-1">
                 <div class="l-box">
@@ -57,26 +54,6 @@
                 </div>
             </div>
 
-            <!-- Displaying a table containing room information -->
-            <div class="text-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-                <table class="pure-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Size</th>
-                            </tr>
-                        </thead>
-                        {% for rs in object.room_space.all %}
-                            <tbody>
-                                <td>{{rs.name}}</td>
-                                <td>{{rs.description}}</td>
-                                <td>{{rs.size}}</td>
-                            </tbody>
-                        {% endfor %}
-                </table>
-            </div>
-
             <!-- displaying all images assosicated with  a posting -->
             {% for rs in object.image_paths %}
                 <div class="photo-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
@@ -84,13 +61,47 @@
                 </div>
             {% endfor %}
 
-
-
+            <!-- Displaying a table containing room information -->
+            <div class="table-box pure-u-1 pure-u-md-1 pure-u-lg-1">
+                <div class="l-box">
+                    <h1 class="text-box-head">
+                        Details
+                    </h1>
+                    <table class="pure-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Floor</th>
+                                    <th>Ceiling<br>Height</th>
+                                    <th>Insulated</th>
+                                    <th>Number of<br>windows</th>
+                                    <th>Fireplace</th>
+                                    <th>SQFT</th>
+                                    <th>Dimensions</th>
+                                    <th>Shape</th>
+                                    <th>Flooring</th>
+                                </tr>
+                            </thead>
+                            {% for rs in object.room_space.all %}
+                                <tbody>
+                                    <td>{{rs.name}}</td>
+                                    <td>{{rs.description}}</td>
+                                    <td>{{rs.floor_level}}</td>
+                                    <td>{{rs.ceiling_heights}}</td>
+                                    <td>{{rs.is_insulated}}</td>
+                                    <td>{{rs.num_of_windows}}</td>
+                                    <td>{{rs.fireplace}}</td>
+                                    <td>{{rs.sqft}}</td>
+                                    <td>{{rs.dimA}} X {{rs.dimB}}</td>
+                                    <td>{{rs.shape}}</td>
+                                    <td>{{rs.flooring}}</td>
+                                </tbody>
+                            {% endfor %}
+                    </table>
+                </div>
+            </div>
         </div>
-
-        
-
     </div>
-
 </body>
 </html>
