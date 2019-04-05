@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 
 <!doctype html>
 <html lang="en">
@@ -17,7 +18,6 @@
         <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
     <!--<![endif]-->
     
-    
         <!--[if lte IE 8]>
             <link rel="stylesheet" href="css/layouts/listing_detail-old-ie.css">
         <![endif]-->
@@ -25,62 +25,72 @@
             <link rel="stylesheet" href="{% static 'global_listing/listing_detail.css' %}">
         <!--<![endif]-->
 </head>
+
 <body>
 
-<div>
-    <div class="header">
-        <div class="pure-menu pure-menu-horizontal">
-            <a class="pure-menu-heading" href="">Listing Details</a>
 
-            <ul class="pure-menu-list">
-                <li class="pure-menu-item pure-menu-selected"><a href="{% url 'home' %}" class="pure-menu-link">Home</a></li>
-                <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">Blog</a></li> -->
-                <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li> -->
-            </ul>
-        </div>
-    </div>
+    <div>
+        <div class="header">
+            <div class="pure-menu pure-menu-horizontal">
+                <a class="pure-menu-heading" href="">Listing Details</a>
 
-    <!-- this div contains all the info about a posting -->
-    <div class="pure-g">
-
-        <!-- displaying all images assosicated with  a posting -->
-        {% for rs in object.image_paths %}
-            <div class="photo-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-                <img src="{{ rs.image.url }}">
-            </div>
-        {% endfor %}
-
-        <div class="text-box pure-u-1 pure-u-md-1-2 pure-u-lg-2-3">
-            <div class="l-box">
-                <h1 class="text-box-head">{{ object.post_title }} ${{ object.price }} </h1>
-                <p class="text-box-subhead">{{ object.description }}</p>
+                <ul class="pure-menu-list">
+                    <li class="pure-menu-item pure-menu-selected"><a href="{% url 'home' %}" class="pure-menu-link">Home</a></li>
+                    <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">Blog</a></li> -->
+                    <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li> -->
+                </ul>
             </div>
         </div>
 
+        <!-- this div contains all the info about a posting -->
+        <div class="pure-g">
+
+            
+            <!-- Displaying title, description and price of the property -->
+            <div class="text-box pure-u-1 pure-u-md-1 pure-u-lg-1">
+                <div class="l-box">
+                    <h1 class="text-box-head">
+                        {{ object.post_title }} 
+                        <span style="float:right">${{ object.price|intcomma }}</span>
+                    </h1>
+                    <p class="text-box-subhead">{{ object.description }}</p>
+                </div>
+            </div>
+
+            <!-- Displaying a table containing room information -->
+            <div class="text-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+                <table class="pure-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        {% for rs in object.room_space.all %}
+                            <tbody>
+                                <td>{{rs.name}}</td>
+                                <td>{{rs.description}}</td>
+                                <td>{{rs.size}}</td>
+                            </tbody>
+                        {% endfor %}
+                </table>
+            </div>
+
+            <!-- displaying all images assosicated with  a posting -->
+            {% for rs in object.image_paths %}
+                <div class="photo-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+                    <img class="pure-img-responsive" src="{{ rs.image.url }}">
+                </div>
+            {% endfor %}
+
+
+
+        </div>
+
+        
 
     </div>
-
-    <table class="pure-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Size</th>
-            </tr>
-        </thead>
-
-        {% for rs in object.room_space.all %}
-            <tbody>
-                
-                    <td>{{rs.name}}</td>
-                    <td>{{rs.description}}</td>
-                    <td>{{rs.size}}</td>
-
-            </tbody>
-        {% endfor %}
-    </table>
-
-</div>
 
 </body>
 </html>
