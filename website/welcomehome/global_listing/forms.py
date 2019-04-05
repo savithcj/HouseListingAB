@@ -26,7 +26,7 @@ class RoomSpaceForm(forms.ModelForm):
 
 RoomSpaceFormSet = inlineformset_factory(
     Property, RoomSpace, form=RoomSpaceForm,
-    fields=['name','description','ceiling_heights','is_insulated','num_of_windows','fireplace','sqft'], 
+    fields=['name','description','floor_level','shape','dimA','dimB','flooring','fireplace','ceiling_heights','num_of_windows','sqft','is_insulated',], 
     extra=1,can_delete=True, can_order=True,
     max_num=30,
 )
@@ -47,7 +47,7 @@ class PostForm(forms.ModelForm):
             ("Mobile", "Mobile"),
             ("Hut", "Hut"),
             )
-    residence_type = forms.TypedMultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=OPTIONS, required=False)
+    residence_type = forms.ChoiceField(choices=OPTIONS, required=False)
     is_commercial = forms.BooleanField(required=False)
     num_of_buildings = forms.IntegerField(required=False)
 

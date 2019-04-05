@@ -13,6 +13,7 @@ from django.urls import reverse_lazy
 
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
+from django.http import Http404
 
 def signup(request):
     if request.method == 'POST':
@@ -135,8 +136,8 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
                 return self.form_valid(form, room_form)
             else:
                 print("ckpt 5")
-                # self.object.delete()
-                # self.object = None
+                self.object.delete()
+                self.object = self.get_object()
                 return self.form_invalid(form, room_form)
         else:
             print("ckpt 6")
@@ -164,3 +165,10 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
         current_kwargs = super(ListingEditView, self).get_form_kwargs()
         current_kwargs['user_instance'] = self.request.user
         return current_kwargs
+
+    def get_object(self, *args, **kwargs):
+        """Checks the user id against the owner of the post being edited"""
+        obj = super(ListingEditView, self).get_object(*args, **kwargs)
+        if obj.user.id != self.request.user.id:
+            raise Http404
+        return obj
