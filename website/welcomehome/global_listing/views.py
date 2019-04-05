@@ -116,15 +116,16 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
 
         if self.request.POST:   # form being posted by user
             print("ckpt 1")
-            context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object)
+            context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.get_object())
         else:   # form being requested by user
             print("ckpt 2")
-            context['room_form'] = RoomSpaceFormSet(instance=self.object)
+            context['room_form'] = RoomSpaceFormSet(instance=self.get_object())
         
         return context
 
     def post(self, request, *args, **kwargs):
         """Check if form is valid, and then calls form_valid to check room_forms"""
+        self.object = self.get_object()
         form = self.get_form()
         
         if form.is_valid(): # if form is valid, save before proceeding next to check on room_forms
@@ -136,8 +137,6 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
                 return self.form_valid(form, room_form)
             else:
                 print("ckpt 5")
-                self.object.delete()
-                self.object = self.get_object()
                 return self.form_invalid(form, room_form)
         else:
             print("ckpt 6")
