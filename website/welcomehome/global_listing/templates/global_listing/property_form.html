@@ -1,5 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Create Listing</title>
+{% endblock title %}
+
  {% load crispy_forms_tags %}
 
+ {% block content %}
 <div class="container">
     <div class="card">
         <div class="card-header">
@@ -12,3 +19,4 @@
         </div>
     </div>
 </div>
+{% endblock content %}

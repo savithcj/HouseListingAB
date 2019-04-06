@@ -16,16 +16,6 @@ h1,h2,h3,h4,h5,h6 {
     margin:auto;
 }
 
-.header .pure-menu {
-    background-color: #eee;
-    border-bottom-color: black;
-    border-radius: 0;
-}
-
-.pure-menu-link {
-    padding: 1em .7em;
-}
-
 .photo-box, .text-box {
     overflow: hidden;
     position: relative;
@@ -155,7 +145,7 @@ h1,h2,h3,h4,h5,h6 {
   
   #questions {
     bottom: 20%;
-    background-color: rgba(238, 224, 23, 0.815);
+    background-color: white;
   }
 
   /* The Modal (background) */ 
