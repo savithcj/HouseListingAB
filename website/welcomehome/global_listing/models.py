@@ -77,7 +77,7 @@ class PropertyAddress(models.Model):
 	tel = PhoneNumberField(null=True, blank=True)
 
 	def __str__(self):
-		return str(self.street)
+		return str(self.street)+", "+str(self.postal)
 
 def get_image_filename(instance, filename):
 	title = str(instance.id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")

@@ -73,7 +73,7 @@ h1,h2,h3,h4,h5,h6 {
         }
 
 .text-box {
-    height: 300px;
+    height: auto;
     overflow: auto;
     color: #F8F1E5;
 }
@@ -98,7 +98,7 @@ h1,h2,h3,h4,h5,h6 {
     }
 
 .table-box{
-    height: 400px;
+    height: auto;
     overflow: auto;
     background: #426E86; 
     color: #fff; 
@@ -137,27 +137,28 @@ h1,h2,h3,h4,h5,h6 {
 /* Style the links inside the sidenav */
 #mySidenav span {
     position: fixed; /* Position them relative to the browser window */
-    left: -94px; /* Position them outside of the screen */
+    left: -89px; /* Position them outside of the screen */
     transition: 0.3s; /* Add transition on hover */
-    padding: 10px; /* 15px padding */
-    width: 100px; /* Set a specific width */
+    padding: 3px; /* 15px padding */
+    width: 110px; /* Set a specific width */
     text-decoration: none; /* Remove underline */
     font-size: 20px; /* Increase font size */
-    color: white; /* White text color */
+    color: black; /* White text color */
     border-radius: 0 5px 5px 0; /* Rounded corners on the top right and bottom right side */
+    box-shadow: 3px 3px 3px 2px #2F3131;
     cursor: pointer;
-  }
+}
   
   #mySidenav span:hover {
     left: 0; /* On mouse-over, make the elements appear as they should */
   }
   
   #questions {
-    bottom: 80px;
-    background-color: #0c7c89;
+    bottom: 20%;
+    background-color: rgba(238, 224, 23, 0.815);
   }
 
-  /* The Modal (background) */
+  /* The Modal (background) */ 
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */

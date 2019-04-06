@@ -1,52 +1,19 @@
-{% load static %}
+{% extends 'base.html' %}
+
 {% load humanize %}
+{% load static %}   
 
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A layout example that shows off a responsive photo gallery.">
+{% block title %}
     <title>Listing Detail</title>
-    
+{% endblock title %}
+
+{% block staticfiles %}
+    <link rel="stylesheet" href="{% static 'global_listing/listing_detail.css' %}">
     <script type="text/javascript" src="{% static 'global_listing/scripts.js' %}"></script>
-    <script type="text/javascript" src="{% static 'global_listing/modal.js' %}"></script>
+{% endblock staticfiles %}
 
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
-    
-    <!--[if lte IE 8]>
-        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
-    <![endif]-->
-    <!--[if gt IE 8]><!-->
-        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
-    <!--<![endif]-->
-    
-        <!--[if lte IE 8]>
-            <link rel="stylesheet" href="css/layouts/listing_detail-old-ie.css">
-        <![endif]-->
-        <!--[if gt IE 8]><!-->
-            <link rel="stylesheet" href="{% static 'global_listing/listing_detail.css' %}">
-            
-        <!--<![endif]-->
-
-</head>
-
-<body>
+{% block content %}
     <div>
-        <div class="header">
-            <div class="pure-menu pure-menu-horizontal">
-                <a class="pure-menu-heading" href="{% url 'home' %}">WelcomeHomeAB</a>
-
-                <ul class="pure-menu-list">
-                    <li class="pure-menu-item pure-menu-selected"><a href="{% url 'home' %}" class="pure-menu-link">Home</a></li>
-                    <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">Blog</a></li> -->
-                    <!-- <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li> -->
-                </ul>
-            </div>
-        </div>
-
-        
-
         <!-- this div contains all the info about a posting -->
         <div class="pure-g">
 
@@ -56,6 +23,10 @@
                     <h1 class="text-box-head">
                         {{ object.post_title }} 
                         <span style="float:right">${{ object.price|intcomma }}</span>
+                    </h1>
+                    <h1 class="text-box-head">
+                        {{ object.property_address }}
+                        <span style="float:right">{{ object.above_grade_sqft|intcomma }} sqft</span> 
                     </h1>
                     <p class="text-box-subhead">{{ object.description }}</p>
                 </div>
@@ -119,7 +90,7 @@
                 <span id="questions">
                     Contact
                     <div style="float:right">
-                        ?
+                        <img src="{% static 'global_listing/q.png' %}" alt="?" height="22" width="22">
                     </div>
                 </span>
         </div>
@@ -132,12 +103,11 @@
                 <span class="close">&times;</span>
                 <p>Contact {{object.user.user}} at {{object.user.phone_day}} or {{object.user.user.email}}</p>
             </div>
-      
+        
         </div>
     </div>
+{% endblock content %}
 
-    <script type="text/javascript" src="{% static 'global_listing/scripts.js' %}"></script>
+{% block jsFiles %}
     <script type="text/javascript" src="{% static 'global_listing/modal.js' %}"></script>
-
-</body>
-</html>
+{% endblock jsFiles %}
