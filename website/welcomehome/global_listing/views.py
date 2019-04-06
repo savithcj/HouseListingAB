@@ -119,13 +119,18 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
         context = super(ListingEditView, self).get_context_data(**kwargs)
         instance = self.get_object()
 
-        if self.request.POST:   # form being posted by user
+        if self.request.POST:   # form being posted by user, POST
             context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=instance, prefix='rooms')
             context['image_form'] = ImageFormSet(self.request.POST, self.request.FILES, instance=instance, prefix='images')
-        else:   # form being requested by user
+        
+        else:   # form being requested by user, GET
+            
             context['room_form'] = RoomSpaceFormSet(instance=instance, prefix='rooms')
             context['image_form']= ImageFormSet(instance=instance, prefix='images')
-            
+
+            if instance.has_rooms(): # Set extra inline formset to zero if the Property already has rooms
+                context['room_form'].extra = 0
+             
         return context
 
     def post(self, request, *args, **kwargs):

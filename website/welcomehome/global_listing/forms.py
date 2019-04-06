@@ -25,6 +25,7 @@ class ImageForm(forms.ModelForm):
         exclude= ()
 
 class RoomSpaceForm(forms.ModelForm):
+    name = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'ie: Kitchen, Living Room, Bedroom, etc.'}))
 
     shape_options = (
         (0, "Square/Rectangle"),
@@ -44,8 +45,8 @@ class RoomSpaceForm(forms.ModelForm):
         (7, "Other"),
     )
 
-    flooring = forms.ChoiceField(choices=flooring_options, required=False)
-    shape = forms.ChoiceField(choices=shape_options, required=False)
+    flooring = forms.ChoiceField(choices=flooring_options, required=False, initial=None)
+    shape = forms.ChoiceField(choices=shape_options, required=False, initial=None)
 
     class Meta:
         model = RoomSpace
