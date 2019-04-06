@@ -1,6 +1,6 @@
 body {
     color: #666;
-    background-color: #426E86;
+    background-color: #2F3131;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -75,11 +75,11 @@ h1,h2,h3,h4,h5,h6 {
 .text-box {
     height: 300px;
     overflow: auto;
-    color: #fff; /* steel blue */
+    color: #F8F1E5;
 }
 
     .text-box-head {
-        color: #fff;
+        color: #F8F1E5;
         font-weight: bolder;
         padding-bottom: 0.2em;
         font-weight: 400;
@@ -100,7 +100,7 @@ h1,h2,h3,h4,h5,h6 {
 .table-box{
     height: 400px;
     overflow: auto;
-    background: #2F3131; 
+    background: #426E86; 
     color: #fff; 
 }
 
