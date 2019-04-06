@@ -17,6 +17,12 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username','email','phone_day','password1','password2', )
 
+class ImageForm(forms.ModelForm):
+    image = forms.ImageField(required=True)
+
+    class Meta:
+        model = PropertyImages
+        exclude= ()
 
 class RoomSpaceForm(forms.ModelForm):
 
@@ -48,7 +54,13 @@ class RoomSpaceForm(forms.ModelForm):
 RoomSpaceFormSet = inlineformset_factory(
     Property, RoomSpace, form=RoomSpaceForm,
     fields=['name','description','floor_level','shape','dimA','dimB','flooring','fireplace','ceiling_heights','num_of_windows','sqft','is_insulated',], 
-    extra=1,can_delete=True, can_order=True,
+    extra=1, can_delete=True, can_order=True,
+    max_num=30,
+)
+
+ImageFormSet = inlineformset_factory(Property, PropertyImages, form=ImageForm, 
+    fields =['image','title'],
+    extra=1, can_delete=True, can_order=True,
     max_num=30,
 )
 
@@ -95,8 +107,8 @@ class PostForm(forms.ModelForm):
                 Field('is_residential'),
                 Field('is_commercial'),
                 Field('num_of_buildings'),
-                Fieldset('Add room',
-                    Formset('room_form')),
+                Fieldset('Add room',Formset('room_form')),
+                Fieldset('Add image',ImageFormset('image_form')),
                 HTML("<br>"),
                 ButtonHolder(Submit('submit', 'save')),
                 )
@@ -106,9 +118,3 @@ class PostForm(forms.ModelForm):
         return self.user.user_profile
 
 
-class ImageForm(forms.ModelForm):
-    image = forms.ImageField(label='Image')
-
-    class Meta:
-        model = PropertyImages
-        fields = ('image',)
