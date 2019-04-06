@@ -14,6 +14,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = UserProfileSerializer
+    http_method_names = ['get', 'head']
 
 class PropertyViewSet(viewsets.ModelViewSet):
     queryset = Property.objects.all()
@@ -21,6 +22,7 @@ class PropertyViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = PropertySerializer
+    http_method_names = ['get', 'head']
 
 class PropertyImageViewSet(viewsets.ModelViewSet):
     queryset = PropertyImages.objects.all()
@@ -28,6 +30,7 @@ class PropertyImageViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = PropertyImageSerializer
+    http_method_names = ['get', 'head']
 
 class RoomSpaceViewSet(viewsets.ModelViewSet):
     queryset = RoomSpace.objects.all()
@@ -35,6 +38,7 @@ class RoomSpaceViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = RoomSpaceSerializer
+    http_method_names = ['get', 'head']
 
 class PropertyAddressViewSet(viewsets.ModelViewSet):
     queryset = PropertyAddress.objects.all()
@@ -42,3 +46,4 @@ class PropertyAddressViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = PropertyAddressSerializer
+    http_method_names = ['get', 'head']
