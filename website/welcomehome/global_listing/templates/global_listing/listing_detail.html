@@ -9,6 +9,8 @@
     <meta name="description" content="A layout example that shows off a responsive photo gallery.">
     <title>Listing Detail</title>
     
+    <script type="text/javascript" src="{% static 'global_listing/scripts.js' %}"></script>
+
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
     
     <!--[if lte IE 8]>
@@ -24,6 +26,7 @@
         <!--[if gt IE 8]><!-->
             <link rel="stylesheet" href="{% static 'global_listing/listing_detail.css' %}">
         <!--<![endif]-->
+
 </head>
 
 <body>
@@ -94,8 +97,12 @@
                                     <td>{{rs.fireplace}}</td>
                                     <td>{{rs.sqft}}</td>
                                     <td>{{rs.dimA}} X {{rs.dimB}}</td>
-                                    <td>{{rs.shape}}</td>
-                                    <td>{{rs.flooring}}</td>
+                                    <td id="shape{{rs.id}}"></td>
+                                    <td id="floor{{rs.id}}"></td>
+                                    <script>
+                                        getShapeType({{rs.shape}}, "shape{{ rs.id }}");
+                                        getFloorType({{rs.flooring}}, "floor{{ rs.id }}");
+                                    </script>
                                 </tbody>
                             {% endfor %}
                     </table>
@@ -103,5 +110,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>
