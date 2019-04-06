@@ -4,6 +4,7 @@ from .models import *
 from .forms import *
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from django.template import loader
 from django.urls import reverse
@@ -14,6 +15,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.http import Http404
+from django.contrib import messages
 
 def signup(request):
     if request.method == 'POST':
@@ -29,8 +31,31 @@ def signup(request):
             return redirect('home')
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'registration/signup.html', {'form': form})
 
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = UserProfileUpdateForm(request.POST, instance=request.user.user_profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('profile')
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = UserProfileUpdateForm(instance=request.user.user_profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form,
+    }
+    return render(request, 'registration/profile.html', context)
+
+@login_required
+def my_listings(request):
+    pass
 
 class IndexView(generic.ListView):
     model = Property
@@ -88,7 +113,7 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
             return self.form_invalid(form, None, None)
 
     def form_invalid(self, form, room_form, image_form):
-        print(form.errors,room_form.errors)
+        # print(form.errors,room_form.errors)
         return super(ListingCreateView, self).form_invalid(form)
 
     def form_valid(self, form, room_form, image_form):
@@ -108,7 +133,6 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
         current_kwargs['user_instance'] = self.request.user
         return current_kwargs
 
-
 class ListingEditView(LoginRequiredMixin, generic.UpdateView):
     template_name = 'global_listing/property_form.html'
     model = Property
@@ -124,13 +148,12 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
             context['image_form'] = ImageFormSet(self.request.POST, self.request.FILES, instance=instance, prefix='images')
         
         else:   # form being requested by user, GET
-            
             context['room_form'] = RoomSpaceFormSet(instance=instance, prefix='rooms')
             context['image_form']= ImageFormSet(instance=instance, prefix='images')
 
             if instance.has_rooms(): # Set extra inline formset to zero if the Property already has rooms
                 context['room_form'].extra = 0
-             
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -153,7 +176,7 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
             return self.form_invalid(form, None, None)
 
     def form_invalid(self, form, room_form, image_form):
-        print(form.errors,room_form.errors)
+        # print(form.errors,room_form.errors)
         return super(ListingEditView, self).form_invalid(form)
 
     def form_valid(self, form, room_form, image_form):

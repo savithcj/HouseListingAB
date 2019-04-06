@@ -1,5 +1,6 @@
 from django.db import models
 from django.template.defaultfilters import slugify
+from PIL import Image
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -56,8 +57,6 @@ class Property(models.Model):
 		else:
 			return False
 
-
-	
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.CASCADE)
 	name = models.CharField(max_length=30, null=True, blank=True)
@@ -91,7 +90,7 @@ class PropertyAddress(models.Model):
 def get_image_filename(instance, filename):
 	title = str(instance.id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
 	slug = slugify(title)
-	return f"{str(instance.id)}/{slug}"
+	return f"{str(instance.id)}/{slug}.jpg"
 
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='property_image', on_delete=models.CASCADE)
@@ -100,3 +99,12 @@ class PropertyImages(models.Model):
 
 	def image_path(self):
 		return get_image_filename
+
+	def save(self):
+		"""Resizes large images to sizes specified below"""
+		super().save()
+		img = Image.open(self.image.path)
+		if img.height > 700 or img.width > 1000:
+			output_size = (700, 1000)
+			img.thumbnail(output_size)
+			img.save(self.image.path)

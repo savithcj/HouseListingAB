@@ -17,6 +17,16 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username','email','phone_day','password1','password2', )
 
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username','email','first_name','last_name']
+
+class UserProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['phone_day', 'phone_alt']
+
 class ImageForm(forms.ModelForm):
     image = forms.ImageField(required=True)
 
@@ -68,8 +78,7 @@ ImageFormSet = inlineformset_factory(Property, PropertyImages, form=ImageForm,
 class PostForm(forms.ModelForm):
     post_title = forms.CharField(max_length=128, required=True, widget=forms.TextInput(attrs={'placeholder':'a catchy descriptive title'}))
     description = forms.CharField(max_length=2450, required=True, widget=forms.Textarea(attrs={'placeholder':"My beautiful home up for sale has...",'rows': 6, 'cols': 50}))
-    # is_active = forms.BooleanField(initial=True)
-
+    
     is_active = forms.TypedChoiceField(
         coerce = lambda x: x == 'True',
         choices = ((True, 'Activate Listing'), (False, 'Deactivate Listing')),
@@ -126,6 +135,13 @@ class PostForm(forms.ModelForm):
             )
 
     def clean_user(self):
+        """The clean_<fieldname>() method is called on a form subclass – where <fieldname> is replaced
+         with the name of the form field attribute. This method does any cleaning that is specific
+         to that particular attribute, unrelated to the type of field that it is. This method is not 
+        passed any parameters. You will need to look up the value of the field in self.cleaned_data 
+        and remember that it will be a Python object at this point, not the original string submitted 
+        in the form (it will be in cleaned_data because the general field clean() method, above, 
+        has already cleaned the data once)."""
         return self.user.user_profile
 
 
