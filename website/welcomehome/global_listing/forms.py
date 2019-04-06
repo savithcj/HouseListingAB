@@ -67,6 +67,15 @@ ImageFormSet = inlineformset_factory(Property, PropertyImages, form=ImageForm,
 class PostForm(forms.ModelForm):
     post_title = forms.CharField(max_length=128, required=True, widget=forms.TextInput(attrs={'placeholder':'a catchy descriptive title'}))
     description = forms.CharField(max_length=2450, required=True, widget=forms.Textarea(attrs={'placeholder':"My beautiful home up for sale has...",'rows': 6, 'cols': 50}))
+    # is_active = forms.BooleanField(initial=True)
+
+    is_active = forms.TypedChoiceField(
+        coerce = lambda x: x == 'True',
+        choices = ((True, 'Activate Listing'), (False, 'Deactivate Listing')),
+        initial = True,
+        widget = forms.RadioSelect,
+    )
+
     price = forms.FloatField(required=True)
     above_grade_sqft = forms.FloatField(required=True)
     lot_size = forms.FloatField(required=False)
@@ -98,6 +107,7 @@ class PostForm(forms.ModelForm):
         self.helper.field_class = 'col-md-9'
         self.helper.layout = Layout(
             Div(
+                Field('is_active'),
                 Field('post_title'),
                 Field('price'),
                 Field('residence_type'),

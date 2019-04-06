@@ -44,19 +44,15 @@ class Property(models.Model):
 		super(Property, self).save(*args, **kwargs)
 
 	def image_paths(self):
-		# TODO: filter for active postings only
 		images = self.property_image.all()
 		return images
-
-	# TODO: implement method to return contact information: email, phone number
-
 	
 
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.CASCADE)
 	name = models.CharField(max_length=30, null=True, blank=True)
 	description = models.CharField(max_length=30, null=True, blank=True)
-	floor_level = models.FloatField(default=1, null=True, blank=True) # 0-basement, 1-first floor, 2-second floor, etc
+	floor_level = models.FloatField(null=True, blank=True) # 0-basement, 1-first floor, 2-second floor, etc
 	ceiling_heights = models.FloatField(null=True, blank=True)
 	is_insulated = models.BooleanField(null=True, blank=True)
 	num_of_windows = models.PositiveIntegerField(null=True, blank=True)
@@ -64,8 +60,8 @@ class RoomSpace(models.Model):
 	sqft = models.FloatField(null=True, blank=True)
 	dimA = models.FloatField(null=True, blank=True)
 	dimB = models.FloatField(null=True, blank=True)
-	shape = models.PositiveIntegerField(default=0, null=True, blank=True)	# 0-square/rectangle, 1-round, 2-irregular, 3-other
-	flooring = models.PositiveIntegerField(default=0, null=True, blank=True) # 0-carpet, 1-laminate, 2-wood, 3-wood/polymer composite, 4-vinyl, 5-painted concrete, 6-unfinished concrete, 7-other
+	shape = models.PositiveIntegerField(null=True, blank=True)	# 0-square/rectangle, 1-round, 2-irregular, 3-other
+	flooring = models.PositiveIntegerField(null=True, blank=True) # 0-carpet, 1-laminate, 2-wood, 3-wood/polymer composite, 4-vinyl, 5-painted concrete, 6-unfinished concrete, 7-other
 
 class PropertyAddress(models.Model):
 	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.CASCADE)
