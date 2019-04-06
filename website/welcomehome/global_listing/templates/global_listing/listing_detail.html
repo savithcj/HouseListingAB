@@ -9,6 +9,9 @@
     <meta name="description" content="A layout example that shows off a responsive photo gallery.">
     <title>Listing Detail</title>
     
+    <script type="text/javascript" src="{% static 'global_listing/scripts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'global_listing/modal.js' %}"></script>
+
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
     
     <!--[if lte IE 8]>
@@ -23,7 +26,9 @@
         <![endif]-->
         <!--[if gt IE 8]><!-->
             <link rel="stylesheet" href="{% static 'global_listing/listing_detail.css' %}">
+            
         <!--<![endif]-->
+
 </head>
 
 <body>
@@ -39,6 +44,8 @@
                 </ul>
             </div>
         </div>
+
+        
 
         <!-- this div contains all the info about a posting -->
         <div class="pure-g">
@@ -65,7 +72,7 @@
             <div class="table-box pure-u-1 pure-u-md-1 pure-u-lg-1">
                 <div class="l-box">
                     <h1 class="text-box-head">
-                        Details
+                        Room Details
                     </h1>
                     <table class="pure-table">
                             <thead>
@@ -94,14 +101,43 @@
                                     <td>{{rs.fireplace}}</td>
                                     <td>{{rs.sqft}}</td>
                                     <td>{{rs.dimA}} X {{rs.dimB}}</td>
-                                    <td>{{rs.shape}}</td>
-                                    <td>{{rs.flooring}}</td>
+                                    <td id="shape{{rs.id}}"></td>
+                                    <td id="floor{{rs.id}}"></td>
+                                    <script>
+                                        getShapeType({{rs.shape}}, "shape{{ rs.id }}");
+                                        getFloorType({{rs.flooring}}, "floor{{ rs.id }}");
+                                    </script>
                                 </tbody>
                             {% endfor %}
                     </table>
                 </div>
             </div>
         </div>
+
+        <!-- adding a sidenav button  -->
+        <div id="mySidenav" class="sidenav">
+                <span id="questions">
+                    Contact
+                    <div style="float:right">
+                        ?
+                    </div>
+                </span>
+        </div>
+
+        <!-- adding a modal when the sidenav button is clicked -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Contact {{object.user.user}} at {{object.user.phone_day}} or {{object.user.user.email}}</p>
+            </div>
+      
+        </div>
     </div>
+
+    <script type="text/javascript" src="{% static 'global_listing/scripts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'global_listing/modal.js' %}"></script>
+
 </body>
 </html>
