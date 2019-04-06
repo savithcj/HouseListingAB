@@ -40,8 +40,8 @@ h3 {
 }
 
 .sidebar {
-    background: #0c7c89;
-    color: #fff;
+    background: #2F3131;
+    color: #F8F1E5;
 }
 
 .brand-title,
@@ -69,7 +69,7 @@ h3 {
 .nav-item a {
     background: transparent;
     border: 2px solid rgb(176, 202, 219);
-    color: #fff;
+    color: #F8F1E5;
     margin-top: 1em;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -100,7 +100,7 @@ h3 {
 }
 .post-title {
     font-size: 2em;
-    color: #222;
+    color: #2F3131;
     margin-bottom: 0.2em;
 }
 .post-avatar {
@@ -110,7 +110,7 @@ h3 {
 }
 .post-description {
     font-family: Georgia, "Cambria", serif;
-    color: #444;
+    color: #2F3131;
     line-height: 1.8em;
 }
 .post-meta {
@@ -133,10 +133,10 @@ h3 {
         background: #4d85d1;
     }
     .post-category-yui {
-        background: #8156a7;
+        background: #F9BA32;
     }
     .post-category-js {
-        background: #df2d4f;
+        background: #912d3d;
     }
 
 .post-images {
@@ -148,8 +148,9 @@ h3 {
 .post-image-meta {
     margin-top: -3.5em;
     margin-left: 1em;
-    color: #fff;
-    text-shadow: 0 1px 1px #333;
+    color: #F8F1E5;
+    text-shadow: 0 1px 1px #2F3131;
+    font-size: 80%
 }
 
 .footer {
