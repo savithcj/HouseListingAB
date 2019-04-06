@@ -44,10 +44,20 @@ class Property(models.Model):
 		super(Property, self).save(*args, **kwargs)
 
 	def image_paths(self):
+		"""Returns a query set of images"""
 		images = self.property_image.all()
 		return images
-	
 
+	def has_rooms(self):
+		"""Returns True if the Property has a RoomSpace child"""
+		rooms = self.room_space.count()
+		if rooms > 0:
+			return True
+		else:
+			return False
+
+
+	
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.CASCADE)
 	name = models.CharField(max_length=30, null=True, blank=True)
@@ -62,6 +72,9 @@ class RoomSpace(models.Model):
 	dimB = models.FloatField(null=True, blank=True)
 	shape = models.PositiveIntegerField(null=True, blank=True)	# 0-square/rectangle, 1-round, 2-irregular, 3-other
 	flooring = models.PositiveIntegerField(null=True, blank=True) # 0-carpet, 1-laminate, 2-wood, 3-wood/polymer composite, 4-vinyl, 5-painted concrete, 6-unfinished concrete, 7-other
+
+	def __str__(self):
+		return str(self.name)
 
 class PropertyAddress(models.Model):
 	property_id = models.OneToOneField(Property, related_name='property_address', on_delete=models.CASCADE)
