@@ -144,6 +144,14 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
     form_class = PostForm
     pk_url_kwarg = 'pk'
 
+    def get(self, request, *args, **kwargs):
+        """Check active status of the listing, ensures that inactive listings cannot be edited."""
+        obj = self.get_object()
+        if obj.is_active == False:
+            return redirect('home')
+        else:
+            return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(ListingEditView, self).get_context_data(**kwargs)
         instance = self.get_object()
@@ -165,19 +173,15 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
         """Check if form is valid, and then calls form_valid to check room_forms"""
         self.object = self.get_object()
         form = self.get_form()
-        print("ckpt1")
         if form.is_valid(): # if form is valid, save before proceeding next to check on room_forms
             self.object = form.save()
             room_form = self.get_context_data()['room_form']
             image_form = self.get_context_data()['image_form']
             if room_form.is_valid() and image_form.is_valid():
-                print("ckpt2")
                 return self.form_valid(form, room_form, image_form)
             else:
-                print("ckpt3")
                 return self.form_invalid(form, room_form, image_form)
         else:
-            print("ckpt4")
             return self.form_invalid(form, None, None)
 
     def form_invalid(self, form, room_form, image_form):
@@ -190,7 +194,6 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
         self.object.save()
         room_form.save()
         image_form.save()
-        print("ckpt5")
         return super(ListingEditView, self).form_valid(form)
 
     def get_success_url(self):
@@ -202,9 +205,8 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
         return current_kwargs
 
     def get_object(self, *args, **kwargs):
-        print("ckpt6")
         """Checks the user id against the owner of the post being edited"""
         obj = super(ListingEditView, self).get_object(*args, **kwargs)
-        if obj.user.id != self.request.user.id or obj.is_active != True:
+        if obj.user.id != self.request.user.id:
             raise Http404
         return obj
