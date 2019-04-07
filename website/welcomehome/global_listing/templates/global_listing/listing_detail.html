@@ -19,6 +19,9 @@
             <!-- Displaying title, description and price of the property -->
             <div class="text-box pure-u-1 pure-u-md-1 pure-u-lg-1">
                 <div class="l-box">
+                    {% if request.user == object.user.user %}
+                        <a class="pure-button" href="{% url 'listing-edit' object.id %}">Edit</a>
+                    {% endif %}
                     <h1 class="text-box-head">
                         {{ object.post_title }} 
                         <span style="float:right">${{ object.price|intcomma }}</span>
@@ -104,6 +107,7 @@
             </div>
         
         </div>
+   
 {% endblock content_wide %}
 
 {% block jsFiles %}

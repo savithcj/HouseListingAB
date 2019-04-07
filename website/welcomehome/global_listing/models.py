@@ -100,7 +100,6 @@ class PropertyAddress(models.Model):
 def get_image_filename(instance, filename):
 	title = str(instance.id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
 	slug = slugify(title)
-	print(slug)
 	return f"{str(instance.id)}/{slug}.jpg"
 
 class PropertyImages(models.Model):
