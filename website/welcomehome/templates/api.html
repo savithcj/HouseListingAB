@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>RESTful API</title>
+{% endblock title %}
+
+
+{% block content %}
+    <div>
+        <div>
+            <h1>
+                Database Access through a RESTful API
+            </h1>
+            <p>
+                Information within our database is available free of charge through a RESTful API. Please follow the 
+                approrpriate link to access the relevent data.
+            </p>
+
+            <ul>
+                <li>
+                    <a href="{% url 'properties:property-list' %}" target="_blank">
+                        Property data
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'companies:company-list' %}" target="_blank">
+                        Company & services data
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+     </div>
+
+{% endblock content %}

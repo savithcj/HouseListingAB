@@ -1,6 +1,6 @@
 function getFloorType(typeAsInt, id){
 
-    type = "";
+    let type = "";
 
     switch (typeAsInt) {
         case 0:
@@ -34,7 +34,7 @@ function getFloorType(typeAsInt, id){
 
 function getShapeType(typeAsInt, id){
 
-    type = "";
+    let type = "";
 
     switch (typeAsInt) {
         case 0:
