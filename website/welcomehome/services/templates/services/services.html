@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Services</title>
+    
+{% endblock title %}
+
+{% block content %}
+
+<H2>Affiliated companies and their provided services</H2>
+
+<style>
+        table.pure-table, th, td, tr {
+            border: 1px solid black;
+            border-collapse: collapse;
+          }
+
+</style>
+
+
+<table class="pure-table">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Description</th>
+                <th>Services Provided</th>
+                <th>Website</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        {% for company in companies %}
+            <tbody>
+                <tr>
+                    <td>{{company.name}}</td>
+                    <td>{{company.description}}</td>
+                    <td>
+                        <!-- <table> -->
+                            {% for service in company.provided_services.all %}
+                                <table>
+                                    <tr>{{service}}</tr>
+                                </table>
+                            {% endfor %}
+                        <!-- </table> -->
+                    </td>
+                    <td>
+                        {{company.website_url}}
+                    </td>
+                    <td>
+                        {{company.CompanyAddress.phone}}
+                    </td>
+                </tr>
+            </tbody>
+        {% endfor %}
+</table>
+
+
+
+    
+
+{% endblock content %}
