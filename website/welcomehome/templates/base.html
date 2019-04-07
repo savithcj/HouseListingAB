@@ -44,10 +44,10 @@
             <div class="pure-menu pure-menu-horizontal custom-menu-3 custom-can-transform">
                 <ul class="pure-menu-list">
                     {% if user.is_authenticated %}
-                        <li class="pure-menu-item"><a href="{% url 'profile' %}" class="pure-menu-link">Welcome, {{user.get_username}}</a></li>
-                        <li class="pure-menu-item"><a href="{% url 'listing-create' %}" class="pure-menu-link">Create Post</a></li>
-                        <li class="pure-menu-item"><a href="{% url 'my-listings' %}" class="pure-menu-link">My Posts</a></li>
-                        <li class="pure-menu-item"><a href="{% url 'logout' %}" class="pure-menu-link">Logout</a></li>
+                        <li class="pure-menu-item"><a href="{% url 'profile' %}" class="pure-menu-link">{{user.get_username}}</a></li>
+                        <li class="pure-menu-item"><a href="{% url 'listing-create' %}" class="pure-menu-link">Create Listing</a></li>
+                        <li class="pure-menu-item"><a href="{% url 'my-listings' %}" class="pure-menu-link">My Listings</a></li>
+                        <li class="pure-menu-item"><a href="{% url 'logout' %}" class="pure-menu-link">Log Out</a></li>
                     {% else %}
                         <li class="pure-menu-item">
                             <a href="{% url 'login' %}" class="pure-menu-link">
