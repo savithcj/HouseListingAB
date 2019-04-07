@@ -13,6 +13,14 @@ a:focus {
     text-decoration: none;
 }
 
+a.custom,
+a.custom:hover,
+a.custom:focus,
+a.custom:visited {
+    text-decoration: none;
+    color:#F8F1E5;
+}
+
 h1 {
     font-weight: 80;
 }
