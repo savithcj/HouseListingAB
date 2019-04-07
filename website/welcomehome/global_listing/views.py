@@ -53,10 +53,6 @@ def profile(request):
     }
     return render(request, 'registration/profile.html', context)
 
-@login_required
-def my_listings(request):
-    pass
-
 class IndexView(generic.ListView):
     model = Property
     context_object_name = 'latest_post_list'
@@ -75,8 +71,17 @@ class IndexView(generic.ListView):
 class ListingDetailView(generic.DetailView):
     model = Property
     template_name = "global_listing/listing_detail.html"
+
+class MyListingsView(generic.ListView):
+    model = Property
+    template_name = 'global_listing/my-listings.html'
+    ordering = ['-list_date']
     
-# TODO: User profile and listing view
+    def get_context_data(self, **kwargs):
+        context = super(MyListingsView, self).get_context_data(**kwargs)
+        context["active_posts"] = Property.objects.filter(Q(is_active=True) & Q(user=self.request.user.user_profile))
+        context["inactive_posts"] = Property.objects.filter(Q(is_active=False) & Q(user=self.request.user.user_profile))
+        return context
 
 class ListingCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = 'global_listing/property_form.html'
