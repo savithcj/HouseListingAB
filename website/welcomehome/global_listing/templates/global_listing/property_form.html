@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Create Listing</title>
+{% endblock title %}
+
+ {% load crispy_forms_tags %}
+
+ {% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            Create Listing
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+             {% crispy form %}
+             </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

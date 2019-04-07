@@ -1,17 +1,57 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import *
+from .forms import *
+from django.views.generic.edit import FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+
 from django.template import loader
 from django.urls import reverse
 from django.db.models import Q
+from django.db import transaction
+from django.urls import reverse_lazy
 
-##### imports for image upload
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
+from django.http import Http404
 from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.forms import modelformset_factory
-from .forms import *
 
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            p = user.user_profile
+            p.email = form.cleaned_data.get('email')
+            p.phone_day = form.cleaned_data.get('phone_day')
+            p.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = UserProfileUpdateForm(request.POST, instance=request.user.user_profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('profile')
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = UserProfileUpdateForm(instance=request.user.user_profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form,
+    }
+    return render(request, 'registration/profile.html', context)
 
 class IndexView(generic.ListView):
     model = Property
@@ -19,52 +59,152 @@ class IndexView(generic.ListView):
     template_name = 'global_listing/index.html'
     ordering = ['-list_date']
     
-    # ListView uses a template called <app name>/<model name>_list.html by default, unless overwrite by template_name.
-    # For generic ListView, the automatically generated context variable is question_list, unless overwriten by context_object_name
-
     def get_queryset(self):
         return Property.objects.order_by('-list_date')[:10]
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context["featured_posts"] = Property.objects.filter(post_priority=0)
-        context["recent_posts"] = Property.objects.filter(Q(post_priority=1) | Q(post_priority=2)).order_by('-list_date')[:10]
+        context["featured_posts"] = Property.objects.filter(Q(is_active=True) & Q(post_priority=0))
+        context["recent_posts"] = Property.objects.filter(Q(is_active=True) & (Q(post_priority=1) | Q(post_priority=2))).order_by('-list_date')[:10]
         return context
 
 class ListingDetailView(generic.DetailView):
     model = Property
     template_name = "global_listing/listing_detail.html"
+
+class MyListingsView(generic.ListView):
+    model = Property
+    template_name = 'global_listing/my-listings.html'
+    ordering = ['-list_date']
     
-    # DetailView generic view uses a template called <app name>/<model name>_detail.html by default, unless overwritten by template_name
-    # generic view expects the primary key value captured from the URL to be called 'pk', which is implemented in urls.py
+    def get_context_data(self, **kwargs):
+        context = super(MyListingsView, self).get_context_data(**kwargs)
+        context["active_posts"] = Property.objects.filter(Q(is_active=True) & Q(user=self.request.user.user_profile))
+        context["inactive_posts"] = Property.objects.filter(Q(is_active=False) & Q(user=self.request.user.user_profile))
+        return context
 
+class ListingCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = 'global_listing/property_form.html'
+    model = Property
+    form_class = PostForm
+    success_url = None
 
-# ############### image upload
-@login_required
-def post(request):
-    ImageFormSet = modelformset_factory(PropertyImages, form=ImageForm)
+    def get_context_data(self, **kwargs):
+        context = super(ListingCreateView, self).get_context_data(**kwargs)
 
-    if request.method == 'POST':
-        postForm = PostForm(request.POST)
-        formset = ImageFormSet(request.POST, request.FILES, queryset=PropertyImages.objects.none())
-
-        if postForm.is_valid() and formset.is_valid():
-            post_form = postForm.save(commit=False)
-            post_form.user = request.user
-            post_form.save()
-
-            for form in formset.cleaned_data:
-                if form:
-                    image=form['image']
-                    photo=PropertyImages(post=post_form, image=image)
-                    photo.save()
-            messages.success(request,"Upload success!")
-            return HttpResponseRedirect("/")
-
+        if self.request.POST:
+            context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object, prefix='rooms')
+            context['image_form'] = ImageFormSet(self.request.POST, self.request.FILES, instance=self.object, prefix='images')
         else:
-            print(postForm.errors, formset.errors)
+            context['room_form'] = RoomSpaceFormSet(instance=self.object, prefix='rooms')
+            context['image_form']= ImageFormSet(instance=self.object, prefix='images')
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Check if form is valid, and then calls form_valid to check room_forms"""
+        form = self.get_form()
         
-    else:
-        postForm = PostForm()
-        formset = ImageFormSet(queryset=PropertyImages.objects.none())
-    return render(request, 'global_listing/post.html', {'postForm': postForm, 'formset': formset, 'property_instance': instance})
+        if form.is_valid(): # if form is valid, save before proceeding next to check on room_forms  and image_forms
+            self.object = form.save()
+            room_form = self.get_context_data()['room_form']
+            image_form = self.get_context_data()['image_form']
+            if room_form.is_valid() and image_form.is_valid():
+                return self.form_valid(form, room_form, image_form)
+            else:
+                self.object.delete()
+                self.object = None
+                return self.form_invalid(form, room_form, image_form)
+        else:
+            return self.form_invalid(form, None, None)
+
+    def form_invalid(self, form, room_form, image_form):
+        # print(form.errors,room_form.errors)
+        return super(ListingCreateView, self).form_invalid(form)
+
+    def form_valid(self, form, room_form, image_form):
+        """Called on if form is valid, saves room_form."""
+        self.object.created_by = self.request.user
+        self.object.updated_by = self.request.user
+        self.object.save()
+        room_form.save()
+        image_form.save()
+        return super(ListingCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('listing-detail', kwargs={'pk': self.object.pk})
+
+    def get_form_kwargs(self):
+        current_kwargs = super(ListingCreateView, self).get_form_kwargs()
+        current_kwargs['user_instance'] = self.request.user
+        return current_kwargs
+
+class ListingEditView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'global_listing/property_form.html'
+    model = Property
+    form_class = PostForm
+    pk_url_kwarg = 'pk'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListingEditView, self).get_context_data(**kwargs)
+        instance = self.get_object()
+
+        if self.request.POST:   # form being posted by user, POST
+            context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=instance, prefix='rooms')
+            context['image_form'] = ImageFormSet(self.request.POST, self.request.FILES, instance=instance, prefix='images')
+        
+        else:   # form being requested by user, GET
+            context['room_form'] = RoomSpaceFormSet(instance=instance, prefix='rooms')
+            context['image_form']= ImageFormSet(instance=instance, prefix='images')
+
+            if instance.has_rooms(): # Set extra inline formset to zero if the Property already has rooms
+                context['room_form'].extra = 0
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Check if form is valid, and then calls form_valid to check room_forms"""
+        self.object = self.get_object()
+        form = self.get_form()
+        print("ckpt1")
+        if form.is_valid(): # if form is valid, save before proceeding next to check on room_forms
+            self.object = form.save()
+            room_form = self.get_context_data()['room_form']
+            image_form = self.get_context_data()['image_form']
+            if room_form.is_valid() and image_form.is_valid():
+                print("ckpt2")
+                return self.form_valid(form, room_form, image_form)
+            else:
+                print("ckpt3")
+                return self.form_invalid(form, room_form, image_form)
+        else:
+            print("ckpt4")
+            return self.form_invalid(form, None, None)
+
+    def form_invalid(self, form, room_form, image_form):
+        # print(form.errors,room_form.errors)
+        return super(ListingEditView, self).form_invalid(form)
+
+    def form_valid(self, form, room_form, image_form):
+        """Called on if form is valid, saves room_form."""
+        self.object.updated_by = self.request.user
+        self.object.save()
+        room_form.save()
+        image_form.save()
+        print("ckpt5")
+        return super(ListingEditView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('listing-detail', kwargs={'pk': self.object.pk})
+
+    def get_form_kwargs(self):
+        current_kwargs = super(ListingEditView, self).get_form_kwargs()
+        current_kwargs['user_instance'] = self.request.user
+        return current_kwargs
+
+    def get_object(self, *args, **kwargs):
+        print("ckpt6")
+        """Checks the user id against the owner of the post being edited"""
+        obj = super(ListingEditView, self).get_object(*args, **kwargs)
+        if obj.user.id != self.request.user.id:
+            raise Http404
+        return obj

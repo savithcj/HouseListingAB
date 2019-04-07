@@ -1,0 +1,198 @@
+body {
+    color: #666;
+    background-color: #2F3131;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    color: #111;
+}
+
+.l-box {
+    padding: 2em;
+}
+
+.pure-table{
+    overflow: auto;
+    margin:auto;
+}
+
+.photo-box, .text-box {
+    overflow: hidden;
+    position: relative;
+    height: 250px;
+    text-align: center;
+}
+
+.photo-box-thin {
+    height: 120px;
+}
+
+
+    .photo-box img {
+        width: 100%;
+        height: 100%;
+        min-height: 250px;
+    }
+
+    .photo-box aside {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 1em 0.5em;
+        color: white;
+        width: 100%;
+        font-size: 80%;
+        text-align: right;
+        background: -moz-linear-gradient(top,  rgba(16,27,30,0) 0%, rgba(12,2,2,1) 90%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(16,27,30,0)), color-stop(90%,rgba(12,2,2,1))); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  rgba(16,27,30,0) 0%,rgba(12,2,2,1) 90%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  rgba(16,27,30,0) 0%,rgba(12,2,2,1) 90%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  rgba(16,27,30,0) 0%,rgba(12,2,2,1) 90%); /* IE10+ */
+        background: linear-gradient(to bottom,  rgba(16,27,30,0) 0%,rgba(12,2,2,1) 90%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00101b1e', endColorstr='#0c0202',GradientType=0 );
+
+    }
+
+    .photo-box aside span {
+        color: #aaa;
+    }
+
+        .photo-box aside span a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+.text-box {
+    height: auto;
+    overflow: auto;
+    color: #F8F1E5;
+}
+
+    .text-box-head {
+        color: #F8F1E5;
+        font-weight: bolder;
+        padding-bottom: 0.2em;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 24px;
+    }
+
+    .text-box-subhead {
+        
+        font-weight: 100;
+        letter-spacing: 0.1em;
+        font-family: futura, candara;
+        font-size: 15px;
+        text-shadow: #000;
+    }
+
+.table-box{
+    height: auto;
+    overflow: auto;
+    background: #426E86; 
+    color: #fff; 
+}
+
+.form-box {
+    text-align: center;
+    font-size: 120%;
+    border-bottom: 1px solid #eee;
+}
+
+    .form-box .pure-button {
+        background-color: #61B842;
+        color: white;
+        vertical-align: top;
+        font-size: 85%;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 4px;
+        margin: 0.3em;
+    }
+    .pure-form input[type] {
+        margin: 0.3em auto;
+        text-align: center;
+    }
+
+.footer {
+    background: #111;
+    color: #666;
+    text-align: center;
+    padding: 1em;
+    font-size: 80%;
+}
+
+/* Style the links inside the sidenav */
+#mySidenav span {
+    position: fixed; /* Position them relative to the browser window */
+    left: -89px; /* Position them outside of the screen */
+    transition: 0.3s; /* Add transition on hover */
+    padding: 3px; /* 15px padding */
+    width: 110px; /* Set a specific width */
+    text-decoration: none; /* Remove underline */
+    font-size: 20px; /* Increase font size */
+    color: black; /* White text color */
+    border-radius: 0 5px 5px 0; /* Rounded corners on the top right and bottom right side */
+    box-shadow: 3px 3px 3px 2px #2F3131;
+    cursor: pointer;
+}
+  
+  #mySidenav span:hover {
+    left: 0; /* On mouse-over, make the elements appear as they should */
+  }
+  
+  #questions {
+    bottom: 20%;
+    background-color: white;
+  }
+
+  /* The Modal (background) */ 
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Could be more or less, depending on screen size */
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+
+@media (min-width: 30em) {
+    .photo-box, .text-box {
+        text-align: left;
+    }
+
+    .photo-box-thin {
+        height: 250px;
+    }
+}

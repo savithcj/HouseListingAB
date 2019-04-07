@@ -1,3 +1,6 @@
+# global_listing user uploaded image folder
+media/
+
 # Migrations
 migrations/
 
@@ -113,3 +116,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+#React stuff
+node_modules

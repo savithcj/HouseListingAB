@@ -1,26 +1,111 @@
+{% extends 'base.html' %}
 
+{% load humanize %}
+{% load static %}   
 
-<!DOCTYPE html> 
-<html lang="en"> 
+{% block title %}
+    <title>Listing Detail</title>
+{% endblock title %}
 
-<head> 
-    <meta charset="UTF-8"> 
-    <title>Listing Detail</title> 
-</head> 
+{% block staticfiles %}
+    <link rel="stylesheet" href="{% static 'global_listing/listing_detail.css' %}">
+    <script type="text/javascript" src="{% static 'global_listing/scripts.js' %}"></script>
+{% endblock staticfiles %}
 
-<body> 
-    
-    <h2>{{ object.post_title }}</h2>
+{% block content %}
+        <!-- this div contains all the info about a posting -->
+        <div class="pure-g">
 
-    {% for rs in post.image_paths %}
-        <img src ="{{ rs.image.url }}">
-    {% endfor %}
-    
-    <p>
-        {{ object.description }}
-    </p>
+            <!-- Displaying title, description and price of the property -->
+            <div class="text-box pure-u-1 pure-u-md-1 pure-u-lg-1">
+                <div class="l-box">
+                    <h1 class="text-box-head">
+                        {{ object.post_title }} 
+                        <span style="float:right">${{ object.price|intcomma }}</span>
+                    </h1>
+                    <h1 class="text-box-head">
+                        {{ object.property_address }}
+                        <span style="float:right">{{ object.above_grade_sqft|intcomma }} sqft</span> 
+                    </h1>
+                    <p class="text-box-subhead">{{ object.description }}</p>
+                </div>
+            </div>
 
+            <!-- displaying all images assosicated with  a posting -->
+            {% for rs in object.image_paths %}
+                <div class="photo-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+                    <img class="pure-img-responsive" src="{{ rs.image.url }}">
+                </div>
+            {% endfor %}
 
-</body> 
+            <!-- Displaying a table containing room information -->
+            <div class="table-box pure-u-1 pure-u-md-1 pure-u-lg-1">
+                <div class="l-box">
+                    <h1 class="text-box-head">
+                        Room Details
+                    </h1>
+                    <table class="pure-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Floor</th>
+                                    <th>Ceiling<br>Height</th>
+                                    <th>Insulated</th>
+                                    <th>Number of<br>windows</th>
+                                    <th>Fireplace</th>
+                                    <th>SQFT</th>
+                                    <th>Dimensions</th>
+                                    <th>Shape</th>
+                                    <th>Flooring</th>
+                                </tr>
+                            </thead>
+                            {% for rs in object.room_space.all %}
+                                <tbody>
+                                    <td>{{rs.name}}</td>
+                                    <td>{{rs.description}}</td>
+                                    <td>{{rs.floor_level}}</td>
+                                    <td>{{rs.ceiling_heights}}</td>
+                                    <td>{{rs.is_insulated}}</td>
+                                    <td>{{rs.num_of_windows}}</td>
+                                    <td>{{rs.fireplace}}</td>
+                                    <td>{{rs.sqft}}</td>
+                                    <td>{{rs.dimA}} X {{rs.dimB}}</td>
+                                    <td id="shape{{rs.id}}"></td>
+                                    <td id="floor{{rs.id}}"></td>
+                                    <script>
+                                        getShapeType({{rs.shape}}, "shape{{ rs.id }}");
+                                        getFloorType({{rs.flooring}}, "floor{{ rs.id }}");
+                                    </script>
+                                </tbody>
+                            {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
 
-</html> 
+        <!-- adding a sidenav button  -->
+        <div id="mySidenav" class="sidenav">
+                <span id="questions">
+                    Contact
+                    <div style="float:right">
+                        <img src="{% static 'global_listing/q.png' %}" alt="?" height="22" width="22">
+                    </div>
+                </span>
+        </div>
+
+        <!-- adding a modal when the sidenav button is clicked -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Contact {{object.user.user}} at {{object.user.phone_day}} or {{object.user.user.email}}</p>
+            </div>
+        
+        </div>
+{% endblock content %}
+
+{% block jsFiles %}
+    <script type="text/javascript" src="{% static 'global_listing/modal.js' %}"></script>
+{% endblock jsFiles %}

@@ -54,13 +54,13 @@
             <!-- A wrapper for all postings -->
             <div class="posts">
 
-                <!--Featured Postings-->
+                <!--Active Postings-->
                  
-                {% if featured_posts %}
+                {% if active_posts %}
 
-                <h1 class="content-subhead">Featured Home</h1>
+                <h1 class="content-subhead">My Active Listing</h1>
 
-                    {% for post in featured_posts %}
+                    {% for post in active_posts %}
                     <section class="post">
                         <header class="post-header">
                             
@@ -131,11 +131,11 @@
 
             <div class="posts">
 
-                <!--Recent Postings-->
-                {% if recent_posts %}
-                <h1 class="content-subhead">Recent Postings</h1>
+                <!--Inactive Postings-->
+                {% if inactive_posts %}
+                <h1 class="content-subhead">My Inactive Listing</h1>
 
-                    {% for post in recent_posts %}
+                    {% for post in inactive_posts %}
                     <section class="post">
                         <header class="post-header">
                             
@@ -216,7 +216,6 @@
                         <li class="pure-menu-item"><a href="#" class="pure-menu-link">About Us</a></li>
                         <li class="pure-menu-item"><a href="#" class="pure-menu-link">Home Buy & Sell Tips</a></li>
                         <li class="pure-menu-item"><a href="#" class="pure-menu-link">Home Buying Services</a></li>
-                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">API</a></li>
                     </ul>
                 </div>
             </div>
