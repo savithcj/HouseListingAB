@@ -11,32 +11,57 @@ from .custom_layout_object import *
 from phonenumber_field.formfields import PhoneNumberField
 
 class SignUpForm(UserCreationForm):
-    phone_day = PhoneNumberField(widget=forms.TextInput(attrs={'placeholder': 'Phone'}),label="Phone number", required=False)
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    password1 = forms.CharField(label='Password', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label= 'Confirm password', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    phone_day = PhoneNumberField(widget=forms.TextInput(attrs={'placeholder': 'ie: +14030001234',}),label="Phone number", required=False,)
 
     class Meta:
         model = User
         fields = ('username','email','phone_day','password1','password2', )
 
 class UserUpdateForm(forms.ModelForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    
     class Meta:
         model = User
-        fields = ['username','email','first_name','last_name']
+        fields = ['username','email','first_name','last_name',]        
 
 class UserProfileUpdateForm(forms.ModelForm):
+    phone_day = PhoneNumberField(widget=forms.TextInput(attrs={'placeholder': 'ie: +14030001234','class': 'form-control'}),label="Phone number", required=False,)
+    phone_alt = PhoneNumberField(widget=forms.TextInput(attrs={'placeholder': 'ie: +14030001234','class': 'form-control'}),label="Phone number", required=False,)
     class Meta:
         model = UserProfile
         fields = ['phone_day', 'phone_alt']
 
 class ImageForm(forms.ModelForm):
-    image = forms.ImageField(required=True)
-
+    title = forms.CharField(max_length=25, widget=forms.TextInput(attrs={'placeholder': 'ie: Kitchen, Living Room','class': 'form-control'}))
+    image = forms.ImageField(required=True, widget=forms.FileInput(attrs={'class': 'form-control'}))
+    
     class Meta:
         model = PropertyImages
         exclude= ()
 
-class RoomSpaceForm(forms.ModelForm):
-    name = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'ie: Kitchen, Living Room, Bedroom, etc.'}))
 
+class AddressForm(forms.ModelForm):
+    province_options = (
+        ('AB', 'AB'),
+    )
+    street = forms.CharField(max_length=200, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    city = forms.CharField(max_length=200, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    province = forms.ChoiceField(choices=province_options, required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+    postal = forms.CharField(max_length=7, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    intercom = forms.CharField(max_length=10, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tel = PhoneNumberField(required=False, widget=forms.TextInput(attrs={'placeholder': 'ie: +14030001234', 'class': 'form-control'}),label="Phone Number")
+    class Meta:
+        model = PropertyAddress
+        exclude = ()
+
+class RoomSpaceForm(forms.ModelForm):
     shape_options = (
         (0, "Square/Rectangle"),
         (1, "Round"),
@@ -55,12 +80,25 @@ class RoomSpaceForm(forms.ModelForm):
         (7, "Other"),
     )
 
-    flooring = forms.ChoiceField(choices=flooring_options, required=False, initial=None)
-    shape = forms.ChoiceField(choices=shape_options, required=False, initial=None)
+    name = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={'placeholder':'ie: Kitchen, Living Room, Bedroom, etc.', 'class': 'form-control'}))
+    description = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder':'Describe this room..', 'class': 'form-control'}))
+    floor_level = forms.FloatField(required=False, initial=1, widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    flooring = forms.ChoiceField(choices=flooring_options, required=False, initial=None, widget=forms.Select(attrs={'class': 'form-control'}))
+    shape = forms.ChoiceField(choices=shape_options, required=False, initial=None,widget=forms.Select(attrs={'class': 'form-control'}))
+    dimA = forms.FloatField(required=False, label='Dimension A', widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    dimB = forms.FloatField(required=False, label='Dimension B', widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    # fireplace = forms.BooleanField(required=False)
 
     class Meta:
         model = RoomSpace
         exclude = ()
+
+AddressFormSet = inlineformset_factory(
+    Property, PropertyAddress, form=AddressForm,
+    fields=['street','city','province','postal','intercom','tel'],
+    extra=1, can_delete=False, can_order=False,
+    max_num=1,
+)
 
 RoomSpaceFormSet = inlineformset_factory(
     Property, RoomSpace, form=RoomSpaceForm,
@@ -127,7 +165,8 @@ class PostForm(forms.ModelForm):
                 Field('is_residential'),
                 Field('is_commercial'),
                 Field('num_of_buildings'),
-                Fieldset('Add room',Formset('room_form')),
+                Fieldset('Address',AddressFormset('address_form')),     # See custom_layout_object.py
+                Fieldset('Add room',RoomFormset('room_form')),
                 Fieldset('Add image',ImageFormset('image_form')),
                 HTML("<br>"),
                 ButtonHolder(Submit('submit', 'save')),
