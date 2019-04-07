@@ -8,7 +8,7 @@ from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('admin/', admin.site.urls, name='admin'),
+    path('xxxsupersecret1337hackeraccountpagexxx/', admin.site.urls, name='admin'),
     path('', include('global_listing.urls')),
     path('', include('frontend.urls')),
     path('global_listing/', include('global_listing.urls'), name='global_listing'),
