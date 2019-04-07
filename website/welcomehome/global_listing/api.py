@@ -6,8 +6,6 @@ from .serializers import *
 
 from drf_multiple_model.viewsets import ObjectMultipleModelAPIViewSet
 
-from django.urls import reverse_lazy
-
 #A viewset allows to create a full CRUD API without having to 
 #specify explicit methods for functionality
 #https://www.django-rest-framework.org/tutorial/6-viewsets-and-routers/
