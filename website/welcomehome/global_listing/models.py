@@ -97,13 +97,14 @@ class PropertyAddress(models.Model):
 def get_image_filename(instance, filename):
 	title = str(instance.id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
 	slug = slugify(title)
+	print(slug)
 	return f"{str(instance.id)}/{slug}.jpg"
 
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='property_image', on_delete=models.CASCADE)
 	title = models.CharField(max_length=25, null=True, blank=True)
 	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image', null=False, blank=False)
-
+	
 	def image_path(self):
 		return get_image_filename
 

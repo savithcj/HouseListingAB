@@ -55,7 +55,7 @@ class AddressForm(forms.ModelForm):
     city = forms.CharField(max_length=200, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     province = forms.ChoiceField(choices=province_options, required=True, widget=forms.Select(attrs={'class': 'form-control'}))
     postal = forms.CharField(max_length=7, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    intercom = forms.CharField(max_length=10, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    intercom = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     tel = PhoneNumberField(required=False, widget=forms.TextInput(attrs={'placeholder': 'ie: +14030001234', 'class': 'form-control'}),label="Phone Number")
     class Meta:
         model = PropertyAddress

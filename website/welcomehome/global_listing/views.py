@@ -118,7 +118,7 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
                 self.object = None
                 return self.form_invalid(form, address_form, room_form, image_form)
         else:
-            return self.form_invalid(form, None, None)
+            return self.form_invalid(form, None, None, None)
 
     def form_invalid(self, form, address_form, room_form, image_form):
         # print(form.errors,room_form.errors)
@@ -189,7 +189,7 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
             else:
                 return self.form_invalid(form, address_form, room_form, image_form)
         else:
-            return self.form_invalid(form, None, None)
+            return self.form_invalid(form, None, None, None)
 
     def form_invalid(self, form, address_form, room_form, image_form):
         # print(form.errors,room_form.errors)

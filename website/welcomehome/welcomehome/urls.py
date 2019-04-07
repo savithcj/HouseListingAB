@@ -6,11 +6,11 @@ from django.views.generic import RedirectView
 from global_listing import views
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
+from django.http import HttpResponseRedirect
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
-    path('', include('global_listing.urls')),
-    path('', include('frontend.urls')),
+    path('', lambda x : HttpResponseRedirect('global_listing/')), # re-direct root index request
     path('global_listing/', include('global_listing.urls'), name='global_listing'),
     path('signup/', views.signup, name='signup'),
     path('profile/', views.profile, name='profile'),
@@ -26,3 +26,6 @@ urlpatterns = [
     path('tips/', TemplateView.as_view(template_name='tips.html'), name='tips'),
     path('api-info/', TemplateView.as_view(template_name='api.html'), name='api-info'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
