@@ -93,9 +93,11 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
         context = super(ListingCreateView, self).get_context_data(**kwargs)
 
         if self.request.POST:
+            context['address_form'] = AddressFormSet(self.request.POST, instance=self.object, prefix='address')
             context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=self.object, prefix='rooms')
             context['image_form'] = ImageFormSet(self.request.POST, self.request.FILES, instance=self.object, prefix='images')
         else:
+            context['address_form'] = AddressFormSet(instance=self.object, prefix='address')
             context['room_form'] = RoomSpaceFormSet(instance=self.object, prefix='rooms')
             context['image_form']= ImageFormSet(instance=self.object, prefix='images')
         return context
@@ -104,28 +106,30 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
         """Check if form is valid, and then calls form_valid to check room_forms"""
         form = self.get_form()
         
-        if form.is_valid(): # if form is valid, save before proceeding next to check on room_forms  and image_forms
+        if form.is_valid(): # if form is valid, save before proceeding next to check on formsets
             self.object = form.save()
+            address_form = self.get_context_data()['address_form']
             room_form = self.get_context_data()['room_form']
             image_form = self.get_context_data()['image_form']
-            if room_form.is_valid() and image_form.is_valid():
-                return self.form_valid(form, room_form, image_form)
+            if address_form.is_valid() and room_form.is_valid() and image_form.is_valid():
+                return self.form_valid(form, address_form, room_form, image_form)
             else:
                 self.object.delete()
                 self.object = None
-                return self.form_invalid(form, room_form, image_form)
+                return self.form_invalid(form, address_form, room_form, image_form)
         else:
             return self.form_invalid(form, None, None)
 
-    def form_invalid(self, form, room_form, image_form):
+    def form_invalid(self, form, address_form, room_form, image_form):
         # print(form.errors,room_form.errors)
         return super(ListingCreateView, self).form_invalid(form)
 
-    def form_valid(self, form, room_form, image_form):
+    def form_valid(self, form, address_form, room_form, image_form):
         """Called on if form is valid, saves room_form."""
         self.object.created_by = self.request.user
         self.object.updated_by = self.request.user
         self.object.save()
+        address_form.save()
         room_form.save()
         image_form.save()
         return super(ListingCreateView, self).form_valid(form)
@@ -144,15 +148,25 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
     form_class = PostForm
     pk_url_kwarg = 'pk'
 
+    def get(self, request, *args, **kwargs):
+        """Check active status of the listing, ensures that inactive listings cannot be edited."""
+        obj = self.get_object()
+        if obj.is_active == False:
+            return redirect('home')
+        else:
+            return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(ListingEditView, self).get_context_data(**kwargs)
         instance = self.get_object()
 
         if self.request.POST:   # form being posted by user, POST
+            context['address_form'] = AddressFormSet(self.request.POST, instance=instance, prefix='address')
             context['room_form'] = RoomSpaceFormSet(self.request.POST, instance=instance, prefix='rooms')
             context['image_form'] = ImageFormSet(self.request.POST, self.request.FILES, instance=instance, prefix='images')
         
         else:   # form being requested by user, GET
+            context['address_form'] = AddressFormSet(instance=instance, prefix='address')
             context['room_form'] = RoomSpaceFormSet(instance=instance, prefix='rooms')
             context['image_form']= ImageFormSet(instance=instance, prefix='images')
 
@@ -165,32 +179,29 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
         """Check if form is valid, and then calls form_valid to check room_forms"""
         self.object = self.get_object()
         form = self.get_form()
-        print("ckpt1")
         if form.is_valid(): # if form is valid, save before proceeding next to check on room_forms
             self.object = form.save()
+            address_form = self.get_context_data()['address_form']
             room_form = self.get_context_data()['room_form']
             image_form = self.get_context_data()['image_form']
-            if room_form.is_valid() and image_form.is_valid():
-                print("ckpt2")
-                return self.form_valid(form, room_form, image_form)
+            if address_form.is_valid() and room_form.is_valid() and image_form.is_valid():
+                return self.form_valid(form, address_form, room_form, image_form)
             else:
-                print("ckpt3")
-                return self.form_invalid(form, room_form, image_form)
+                return self.form_invalid(form, address_form, room_form, image_form)
         else:
-            print("ckpt4")
             return self.form_invalid(form, None, None)
 
-    def form_invalid(self, form, room_form, image_form):
+    def form_invalid(self, form, address_form, room_form, image_form):
         # print(form.errors,room_form.errors)
         return super(ListingEditView, self).form_invalid(form)
 
-    def form_valid(self, form, room_form, image_form):
+    def form_valid(self, form, address_form, room_form, image_form):
         """Called on if form is valid, saves room_form."""
         self.object.updated_by = self.request.user
         self.object.save()
+        address_form.save()
         room_form.save()
         image_form.save()
-        print("ckpt5")
         return super(ListingEditView, self).form_valid(form)
 
     def get_success_url(self):
@@ -202,7 +213,6 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
         return current_kwargs
 
     def get_object(self, *args, **kwargs):
-        print("ckpt6")
         """Checks the user id against the owner of the post being edited"""
         obj = super(ListingEditView, self).get_object(*args, **kwargs)
         if obj.user.id != self.request.user.id:

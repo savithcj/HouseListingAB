@@ -4,46 +4,17 @@ from global_listing.models import *
 
 from .serializers import *
 
+from drf_multiple_model.viewsets import ObjectMultipleModelAPIViewSet
+
+from django.urls import reverse_lazy
+
 #A viewset allows to create a full CRUD API without having to 
 #specify explicit methods for functionality
 #https://www.django-rest-framework.org/tutorial/6-viewsets-and-routers/
 
-class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
-    permission_classes = [
-        permissions.AllowAny
+class PropertyAPI(ObjectMultipleModelAPIViewSet):
+    querylist = [
+        {'queryset': Property.objects.all(), 'serializer_class': PropertySerializer},
+        {'queryset': PropertyAddress.objects.all(), 'serializer_class': PropertyAddressSerializer},
+        {'queryset': RoomSpace.objects.all(), 'serializer_class': RoomSpaceSerializer}
     ]
-    serializer_class = UserProfileSerializer
-    http_method_names = ['get', 'head']
-
-class PropertyViewSet(viewsets.ModelViewSet):
-    queryset = Property.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = PropertySerializer
-    http_method_names = ['get', 'head']
-
-class PropertyImageViewSet(viewsets.ModelViewSet):
-    queryset = PropertyImages.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = PropertyImageSerializer
-    http_method_names = ['get', 'head']
-
-class RoomSpaceViewSet(viewsets.ModelViewSet):
-    queryset = RoomSpace.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = RoomSpaceSerializer
-    http_method_names = ['get', 'head']
-
-class PropertyAddressViewSet(viewsets.ModelViewSet):
-    queryset = PropertyAddress.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = PropertyAddressSerializer
-    http_method_names = ['get', 'head']

@@ -57,10 +57,17 @@ class Property(models.Model):
 		else:
 			return False
 
+	def has_address(self):
+		"""Returns True if the Property has a PropertyAddress Child"""
+		if self.property_address is None:
+			return False
+		else:
+			return True
+
 class RoomSpace(models.Model):
 	property_id = models.ForeignKey(Property, related_name='room_space', on_delete=models.CASCADE)
 	name = models.CharField(max_length=30, null=True, blank=True)
-	description = models.CharField(max_length=30, null=True, blank=True)
+	description = models.CharField(max_length=100, null=True, blank=True)
 	floor_level = models.FloatField(null=True, blank=True) # 0-basement, 1-first floor, 2-second floor, etc
 	ceiling_heights = models.FloatField(null=True, blank=True)
 	is_insulated = models.BooleanField(null=True, blank=True)

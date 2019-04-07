@@ -13,4 +13,5 @@ List of installed dependencies(* means optional): not complete
 	<li>phonenumbers</li>
 	<li>Pillow</li>
 	<li>crispy-forms</li>
+	<li>django-rest-multiple-models</li>
 </ul>

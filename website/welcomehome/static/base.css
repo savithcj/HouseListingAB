@@ -1,3 +1,8 @@
+.content {
+    margin:auto;
+    width: 70%;
+}
+
 .custom-wrapper {
     background-color: #d4d4d4;
     margin-bottom: 1em;
@@ -11,7 +16,7 @@
 }
 
 .custom-wrapper.open {
-    height: 14em;
+    height: 20em;
 }
 
 .custom-menu-3 {
