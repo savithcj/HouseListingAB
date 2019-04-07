@@ -39,7 +39,7 @@ class UserProfileUpdateForm(forms.ModelForm):
         fields = ['phone_day', 'phone_alt']
 
 class ImageForm(forms.ModelForm):
-    title = forms.CharField(max_length=25, widget=forms.TextInput(attrs={'placeholder': 'ie: Kitchen, Living Room','class': 'form-control'}))
+    title = forms.CharField(required=False, max_length=25, widget=forms.TextInput(attrs={'placeholder': 'ie: Kitchen, Living Room','class': 'form-control'}))
     image = forms.ImageField(required=True, widget=forms.FileInput(attrs={'class': 'form-control'}))
     
     class Meta:
