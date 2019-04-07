@@ -205,6 +205,6 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
         print("ckpt6")
         """Checks the user id against the owner of the post being edited"""
         obj = super(ListingEditView, self).get_object(*args, **kwargs)
-        if obj.user.id != self.request.user.id:
+        if obj.user.id != self.request.user.id or obj.is_active != True:
             raise Http404
         return obj
