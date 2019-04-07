@@ -12,6 +12,9 @@ class UserProfile(models.Model):
 	phone_day = PhoneNumberField(null=True, blank=True)
 	phone_alt = PhoneNumberField(null=True, blank=True)
 
+	def __str__(self):
+		return self.user.get_username()
+
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
