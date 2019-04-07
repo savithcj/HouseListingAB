@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'global_listing',
     'frontend',
+    'services',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
