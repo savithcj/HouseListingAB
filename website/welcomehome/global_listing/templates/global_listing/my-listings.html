@@ -31,7 +31,7 @@
         <div class="header">
             <a class="custom" href="{% url 'home' %}">
                 <h1 class="brand-title">Welcome<br>Home<br>AB</h1>
-                <h2 class="brand-tagline">DIY Home <br>Sell & Buy</h2>
+                <h2 class="brand-tagline">DIY Home <br>Sell & Buy <br> Commission Free</h2>
             </a>
 
             <nav class="nav">
@@ -39,13 +39,13 @@
                     <li class="nav-item">
                         {% if user.is_authenticated %}
                             <li class="nav-item">
-                                <a class="pure-button" href="{% url 'profile' %}">My Account</a>
+                                <a class="pure-button" href="{% url 'profile' %}">My Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="pure-button" href="{% url 'my-listings' %}">My Posts</a>
+                                <a class="pure-button" href="{% url 'my-listings' %}">My Listings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="pure-button" href="{% url 'listing-create' %}">Create Post</a>
+                                <a class="pure-button" href="{% url 'listing-create' %}">Create Listing</a>
                             </li>
                             <li class="nav-item">
                                 <a class="pure-button" href="{% url 'logout' %}">Log out</a>
@@ -73,7 +73,7 @@
                  
                 {% if active_posts %}
 
-                <h1 class="content-subhead">My Active Listing</h1>
+                <h1 class="content-subhead">My Listings</h1>
 
                     {% for post in active_posts %}
                     <section class="post">
@@ -153,7 +153,7 @@
 
                 <!--Inactive Postings-->
                 {% if inactive_posts %}
-                <h1 class="content-subhead">My Inactive Listing</h1>
+                <h1 class="content-subhead">Archived Listings</h1>
 
                     {% for post in inactive_posts %}
                     <section class="post">
