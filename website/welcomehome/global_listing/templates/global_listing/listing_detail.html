@@ -19,8 +19,11 @@
             <!-- Displaying title, description and price of the property -->
             <div class="text-box pure-u-1 pure-u-md-1 pure-u-lg-1">
                 <div class="l-box">
-                    {% if request.user == object.user.user %}
+                    {% if request.user == object.user.user and object.is_active %}
+                        <p class="text-box-subhead">CURRENTLY LISTED</p>
                         <a class="pure-button" href="{% url 'listing-edit' object.id %}">Edit</a>
+                    {% elif request.user == object.user.user and not object.is_active %}
+                        <p class="text-box-subhead">ARCHIVED</p>
                     {% endif %}
                     <h1 class="text-box-head">
                         {{ object.post_title }} 
@@ -28,18 +31,18 @@
                     </h1>
                     <h1 class="text-box-head">
                         {{ object.property_address }}
-                        <span style="float:right">{{ object.above_grade_sqft|intcomma }} sqft</span> 
+                        <span style="float:right">{{ object.above_grade_sqft|intcomma }} sqft {{object.residence_type}}</span> 
                     </h1>
                     <p class="text-box-subhead">{{ object.description }}</p>
                 </div>
             </div>
 
             <!-- displaying all images assosicated with  a posting -->
+            <div class="container">
             {% for rs in object.image_paths %}
-                <div class="photo-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-                    <img class="pure-img-responsive" src="{{ rs.image.url }}">
-                </div>
+                <img class="photo-box" src="{{ rs.image.url }}">
             {% endfor %}
+            </div>
 
             <!-- Displaying a table containing room information -->
             <div class="table-box pure-u-1 pure-u-md-1 pure-u-lg-1">
