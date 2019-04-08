@@ -20,7 +20,7 @@
             <div class="text-box pure-u-1 pure-u-md-1 pure-u-lg-1">
                 <div class="l-box">
                     {% if request.user == object.user.user and object.is_active %}
-                        <p class="text-box-subhead">CURRENTLY LISTED</p>
+                        <p class="text-box-subhead">LISTED SINCE: {{object.list_date}}</p>
                         <a class="pure-button" href="{% url 'listing-edit' object.id %}">Edit</a>
                     {% elif request.user == object.user.user and not object.is_active %}
                         <p class="text-box-subhead">ARCHIVED</p>
