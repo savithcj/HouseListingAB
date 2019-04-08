@@ -97,10 +97,11 @@ class PropertyAddress(models.Model):
 	def __str__(self):
 		return str(self.street)+", "+str(self.postal)
 
+#the instance id is not created before calling this function
 def get_image_filename(instance, filename):
-	title = str(instance.id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
+	title = str(instance.title) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
 	slug = slugify(title)
-	return f"{str(instance.id)}/{slug}.jpg"
+	return f"{str(instance.property_id)}/{slug}.jpg"
 
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='property_image', on_delete=models.CASCADE)
