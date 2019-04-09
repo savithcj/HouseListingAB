@@ -31,7 +31,7 @@
         <div class="header">
             <a class="custom" href="{% url 'home' %}">
                 <h1 class="brand-title">Welcome<br>Home<br>AB</h1>
-                <h2 class="brand-tagline">DIY Home <br>Buy & SELL <br> Commission Free</h2>
+                <h2 class="brand-tagline">DIY Home <br>Buy & Sell <br> Commission Free</h2>
             </a>
 
             <nav class="nav">
@@ -73,14 +73,13 @@
                  
                 {% if active_posts %}
 
-                <h1 class="content-subhead">My Listings</h1>
+                <h1 class="content-subhead">Currently Listed</h1>
 
                     {% for post in active_posts %}
                     <section class="post">
                         <header class="post-header">
-                            
+                            <a class="pure-button" href="{% url 'listing-edit' post.id %}">Edit</a>
                             <h3> 
-                                <a class="pure-button" href="{% url 'listing-edit' post.id %}">Edit</a>
                                 <a class="post-title" href="{% url 'listing-detail' post.id %}"> 
                                     
                                     {{ post.post_title }}

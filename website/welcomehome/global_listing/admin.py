@@ -17,7 +17,7 @@ class PropertyAddressAdmin(admin.TabularInline):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = ('is_active','price','list_date','user','post_title','post_priority','description','above_grade_sqft','lot_size','is_commercial','business','num_of_buildings','is_residential')
+    list_display = ('id','is_active','price','list_date','user','post_title','post_priority','description','above_grade_sqft','lot_size','is_commercial','business','num_of_buildings','is_residential')
     inlines = [
         PropertyAddressAdmin,
         PropertyImagesAdmin,

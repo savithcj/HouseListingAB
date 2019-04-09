@@ -12,6 +12,9 @@ class UserProfile(models.Model):
 	phone_day = PhoneNumberField(null=True, blank=True)
 	phone_alt = PhoneNumberField(null=True, blank=True)
 
+	def __str__(self):
+		return self.user.get_username()
+
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
@@ -94,16 +97,17 @@ class PropertyAddress(models.Model):
 	def __str__(self):
 		return str(self.street)+", "+str(self.postal)
 
+#the instance id is not created before calling this function
 def get_image_filename(instance, filename):
-	title = str(instance.id) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
+	title = str(instance.title) + datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
 	slug = slugify(title)
-	return f"{str(instance.id)}/{slug}.jpg"
+	return f"{str(instance.property_id)}/{slug}.jpg"
 
 class PropertyImages(models.Model):
 	property_id = models.ForeignKey(Property, related_name='property_image', on_delete=models.CASCADE)
 	title = models.CharField(max_length=25, null=True, blank=True)
 	image = models.ImageField(upload_to=get_image_filename, verbose_name='Image', null=False, blank=False)
-
+	
 	def image_path(self):
 		return get_image_filename
 

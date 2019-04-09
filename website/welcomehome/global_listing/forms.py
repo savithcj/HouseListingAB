@@ -13,8 +13,8 @@ from phonenumber_field.formfields import PhoneNumberField
 class SignUpForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    password1 = forms.CharField(label='Password', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password2 = forms.CharField(label= 'Confirm password', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label= 'Confirm password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     phone_day = PhoneNumberField(widget=forms.TextInput(attrs={'placeholder': 'ie: +14030001234',}),label="Phone number", required=False,)
 
     class Meta:
@@ -55,7 +55,7 @@ class AddressForm(forms.ModelForm):
     city = forms.CharField(max_length=200, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     province = forms.ChoiceField(choices=province_options, required=True, widget=forms.Select(attrs={'class': 'form-control'}))
     postal = forms.CharField(max_length=7, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    intercom = forms.CharField(max_length=10, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    intercom = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     tel = PhoneNumberField(required=False, widget=forms.TextInput(attrs={'placeholder': 'ie: +14030001234', 'class': 'form-control'}),label="Phone Number")
     class Meta:
         model = PropertyAddress

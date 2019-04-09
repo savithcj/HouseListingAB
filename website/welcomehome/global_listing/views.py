@@ -17,6 +17,8 @@ from django.shortcuts import render, redirect
 from django.http import Http404
 from django.contrib import messages
 
+from itertools import chain
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -55,18 +57,15 @@ def profile(request):
 
 class IndexView(generic.ListView):
     model = Property
-    context_object_name = 'latest_post_list'
+    context_object_name = 'post_list'
     template_name = 'global_listing/index.html'
     ordering = ['-list_date']
+    paginate_by = 5
     
     def get_queryset(self):
-        return Property.objects.order_by('-list_date')[:10]
-
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        context["featured_posts"] = Property.objects.filter(Q(is_active=True) & Q(post_priority=0))
-        context["recent_posts"] = Property.objects.filter(Q(is_active=True) & (Q(post_priority=1) | Q(post_priority=2))).order_by('-list_date')[:10]
-        return context
+        qs1 = Property.objects.filter(Q(is_active=True) & Q(post_priority=0)).order_by('-list_date')
+        qs2 = Property.objects.filter(Q(is_active=True) & (Q(post_priority=1) | Q(post_priority=2))).order_by('-list_date')
+        return list(chain(qs1,qs2))
 
 class ListingDetailView(generic.DetailView):
     model = Property
@@ -118,7 +117,7 @@ class ListingCreateView(LoginRequiredMixin, generic.CreateView):
                 self.object = None
                 return self.form_invalid(form, address_form, room_form, image_form)
         else:
-            return self.form_invalid(form, None, None)
+            return self.form_invalid(form, None, None, None)
 
     def form_invalid(self, form, address_form, room_form, image_form):
         # print(form.errors,room_form.errors)
@@ -189,7 +188,7 @@ class ListingEditView(LoginRequiredMixin, generic.UpdateView):
             else:
                 return self.form_invalid(form, address_form, room_form, image_form)
         else:
-            return self.form_invalid(form, None, None)
+            return self.form_invalid(form, None, None, None)
 
     def form_invalid(self, form, address_form, room_form, image_form):
         # print(form.errors,room_form.errors)

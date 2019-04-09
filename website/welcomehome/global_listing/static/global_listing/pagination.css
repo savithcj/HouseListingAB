@@ -1,0 +1,24 @@
+.pagination {
+    display: flex;
+    height: 40px;
+    justify-content:center;
+    padding:  50px;
+}
+
+.pagination a {
+    
+    padding: 10px 25px;
+    text-decoration: none;
+    transition: background-color .3s;
+    color: #2F3131;
+    border: 1px solid #ddd;
+  }
+  
+  /* Style the active/current link */
+  .pagination a.active {
+    background-color: #426E86;
+    color: white;
+  }
+  
+  /* Add a grey background color on mouse-over */
+  .pagination a:hover:not(.active) {background-color: #ddd;}

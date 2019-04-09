@@ -22,6 +22,7 @@
         <![endif]-->
         <!--[if gt IE 8]><!-->
             <link rel="stylesheet" href="{% static 'global_listing/global-listing.css' %}">
+            <link rel="stylesheet" href="{% static 'global_listing/pagination.css' %}">
         <!--<![endif]-->
 </head>
 <body>
@@ -31,7 +32,7 @@
         <div class="header">
             <a class="custom" href="{% url 'home' %}">
                 <h1 class="brand-title">Welcome<br>Home<br>AB</h1>
-                <h2 class="brand-tagline">DIY Home <br>Buy & SELL <br> Commission Free</h2>
+                <h2 class="brand-tagline">DIY Home <br>Buy & Sell <br> Commission Free</h2>
             </a>
 
             <nav class="nav">
@@ -67,24 +68,25 @@
             <!-- A wrapper for all postings -->
             <div class="posts">
 
-                <!--Featured Postings-->
-                 
-                {% if featured_posts %}
 
-                <h1 class="content-subhead">Featured Listings</h1>
+                <h1 class="content-subhead">Listings</h1>
 
-                    {% for post in featured_posts %}
+                    {% for post in post_list %}
                     <section class="post">
                         <header class="post-header">
                             
                             <h3> <a class="post-title" href="{% url 'listing-detail' post.id %}"> 
                                     {{ post.post_title }}
+                                    
                                     <span style="float:right">${{ post.price|intcomma }}</span>
                                 </a>
                             </h3>
 
                             <p class="post-meta">
                                 {{ post.property_address }} 
+                                {% if post.post_priority == 0 %}
+                                    <span class="post-category post-category-yui">Featured</span>
+                                {% endif %}
                                 <a class="post-category post-category-home-type"> {{ post.residence_type }}</a>
                                 <a class="post-category post-category-pure">{{ post.above_grade_sqft }}-sqft</a>
                             </p>
@@ -93,7 +95,7 @@
                         <div class="post-description">
 
                             <div class="post-images pure-g">
-                                <div class="pure-u-1 pure-u-md-1-2">
+                                <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
                                     <a href="{% url 'listing-detail' post.id %}">
                                         <img alt="pic1"                         
                                             class="pure-img-responsive"
@@ -107,7 +109,7 @@
                                         {% if post.image_paths.0.title is not None %}
                                             {{post.image_paths.0.title}}
                                         {% else %}
-                                            {{ '.' }}
+                                            .
                                         {% endif %}
                                     </div>
                                 </div>
@@ -126,7 +128,7 @@
                                         {% if post.image_paths.1.title is not None %}
                                             {{post.image_paths.1.title}}
                                         {% else %}
-                                            {{ '.' }}
+                                            .
                                         {% endif %}
                                     </div>
                                 </div>
@@ -135,92 +137,34 @@
                             <p>
                                 {{ post.description }}
                             </p>
+
                         </div>
                     </section>
                     {% endfor %}
-                {% endif %}
 
             </div>
 
-            <div class="posts">
+            <!-- ADDING PAGINATION -->
+            <div class="pagination">
+                {% if is_paginated %}
+                    {% if page_obj.has_previous %}
+                        <a class="pagination" href="?page=1">First</a>
+                        <a class="pagination" href="?page={{ page_obj.previous_page_number }}">&#10094;</a>
+                    {% endif %}
 
-                <!--Recent Postings-->
-                {% if recent_posts %}
-                <h1 class="content-subhead">Latest Listings</h1>
-
-                    {% for post in recent_posts %}
-                    <section class="post">
-                        <header class="post-header">
-                            
-                                <h3> <a class="post-title" href="{% url 'listing-detail' post.id %}"> 
-                                        {{ post.post_title }}
-                                        <span style="float:right">${{ post.price|intcomma }}</span>
-                                    </a>
-                                </h3>
-
-                            <p class="post-meta">
-                                {{ post.property_address }} 
-                                <a class="post-category post-category-home-type">{{ post.residence_type }}</a>
-                                <a class="post-category post-category-pure">{{ post.above_grade_sqft }}-sqft</a>
-                            </p>
-                        </header>
-
-                        <div class="post-description">
-
-                            <div class="post-images pure-g">
-                                <div class="pure-u-1 pure-u-md-1-2">
-                                    <a href="{% url 'listing-detail' post.id %}">
-                                        <img alt="pic1"
-                                            class="pure-img-responsive"
-                                            src="
-                                                {% for rs in post.image_paths|slice:':1' %}
-                                                {{ rs.image.url }}
-                                                {% endfor %}
-                                            ">
-                                    </a>
-                                    <div class="post-image-meta">
-                                        <h3>
-                                        {% if post.image_paths.0.title is not None %}
-                                            {{post.image_paths.0.title}}
-                                        {% else %}
-                                            {{ '.' }}
-                                        {% endif %}
-                                        </h3> 
-                                    </div>
-                                </div>
-
-                                <div class="pure-u-1 pure-u-md-1-2">
-                                    <a href="{% url 'listing-detail' post.id %}">
-                                        <img alt="pic2"
-                                            class="pure-img-responsive"
-                                            src="
-                                                {% for rs in post.image_paths|slice:'1:2' %}
-                                                {{ rs.image.url }}
-                                                {% endfor %}
-                                            "> 
-                                    </a>
-                                    <div class="post-image-meta">
-                                        <h3>
-                                        {% if post.image_paths.1.title is not None %}
-                                            {{post.image_paths.1.title}}
-                                        {% else %}
-                                            {{ '.' }}
-                                        {% endif %}
-                                        </h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <p>
-                                {{ post.description }}
-                            </p>
-                        </div>
-                    </section>
-
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <a class="pagination active" href="?page={{ num }}">{{ num }}</a>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <a class="pagination" href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
                     {% endfor %}
-                {% endif %}
 
-                
+                    {% if page_obj.has_next %}
+                        <a class="pagination" href="?page={{ page_obj.next_page_number }}">&#10095;</a>
+                        <a class="pagination" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                    {% endif %}
+                {% endif %}
             </div>
 
             <div class="footer">
