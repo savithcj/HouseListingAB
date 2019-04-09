@@ -67,14 +67,6 @@ class IndexView(generic.ListView):
         qs2 = Property.objects.filter(Q(is_active=True) & (Q(post_priority=1) | Q(post_priority=2))).order_by('-list_date')
         return list(chain(qs1,qs2))
 
-    # ---------Removed to add pagination----------
-
-    # def get_context_data(self, **kwargs):
-    #     context = super(IndexView, self).get_context_data(**kwargs)
-    #     context["featured_posts"] = Property.objects.filter(Q(is_active=True) & Q(post_priority=0))
-    #     context["recent_posts"] = Property.objects.filter(Q(is_active=True) & (Q(post_priority=1) | Q(post_priority=2))).order_by('-list_date')[:10]
-    #     return context
-
 class ListingDetailView(generic.DetailView):
     model = Property
     template_name = "global_listing/listing_detail.html"
