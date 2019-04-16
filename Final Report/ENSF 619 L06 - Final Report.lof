@@ -1,0 +1,25 @@
+\contentsline {figure}{\numberline {1}{\ignorespaces Website Landing Page}}{3}{figure.0.1}
+\contentsline {figure}{\numberline {2}{\ignorespaces Enhanced Entity Relationship Diagram}}{4}{figure.0.2}
+\contentsline {figure}{\numberline {3}{\ignorespaces Relation: Admin}}{8}{figure.0.3}
+\contentsline {figure}{\numberline {4}{\ignorespaces Relation: User}}{8}{figure.0.4}
+\contentsline {figure}{\numberline {5}{\ignorespaces Relation: Property}}{9}{figure.0.5}
+\contentsline {figure}{\numberline {6}{\ignorespaces Relation: Service}}{9}{figure.0.6}
+\contentsline {figure}{\numberline {7}{\ignorespaces Relation: Company}}{9}{figure.0.7}
+\contentsline {figure}{\numberline {8}{\ignorespaces Relation: RoomSpace}}{10}{figure.0.8}
+\contentsline {figure}{\numberline {9}{\ignorespaces Relation: Service\_managed\_by}}{10}{figure.0.9}
+\contentsline {figure}{\numberline {10}{\ignorespaces Relation: Company\_managed\_by}}{11}{figure.0.10}
+\contentsline {figure}{\numberline {11}{\ignorespaces Relation: PropertyAddress}}{11}{figure.0.11}
+\contentsline {figure}{\numberline {12}{\ignorespaces Relation: User\_managed\_by}}{11}{figure.0.12}
+\contentsline {figure}{\numberline {13}{\ignorespaces Relation: PhoneNumber}}{12}{figure.0.13}
+\contentsline {figure}{\numberline {14}{\ignorespaces Relation: PropertyImages}}{12}{figure.0.14}
+\contentsline {figure}{\numberline {15}{\ignorespaces Relation: RoomDimension}}{12}{figure.0.15}
+\contentsline {figure}{\numberline {16}{\ignorespaces Relation: RoomFlooring}}{13}{figure.0.16}
+\contentsline {figure}{\numberline {17}{\ignorespaces Relation: RoomKitchen}}{13}{figure.0.17}
+\contentsline {figure}{\numberline {18}{\ignorespaces Relation: KitchenAppliance}}{14}{figure.0.18}
+\contentsline {figure}{\numberline {19}{\ignorespaces Relation: RoomBathroom}}{14}{figure.0.19}
+\contentsline {figure}{\numberline {20}{\ignorespaces Relation: RoomGarage}}{15}{figure.0.20}
+\contentsline {figure}{\numberline {21}{\ignorespaces Relational Model}}{15}{figure.0.21}
+\contentsline {figure}{\numberline {22}{\ignorespaces Django's M-V-T Architecture Pattern \cite {DJ2}}}{16}{figure.0.22}
+\contentsline {figure}{\numberline {23}{\ignorespaces Hierarchy Input Process Output Diagram (HIPO)}}{17}{figure.0.23}
+\contentsline {figure}{\numberline {24}{\ignorespaces Level 1 DFD (Context Diagram)}}{18}{figure.0.24}
+\contentsline {figure}{\numberline {25}{\ignorespaces Level 2 DFD}}{19}{figure.0.25}

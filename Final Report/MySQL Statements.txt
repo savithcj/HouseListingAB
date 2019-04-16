@@ -1,0 +1,43 @@
+-- User sign up, add user authentication to database
+
+-- User authentication update, email confirmation
+
+-- User profile creation
+
+
+-- User profile update
+
+-- Property Posting creation
+
+
+-- Property Posting update
+
+
+-- Property Address creation
+
+
+-- Property Address update
+
+
+-- Property Image upload
+
+-- Property Image update
+
+-- Property Room creation
+
+
+-- Property Room update
+-- Custom room type creation
+
+-- Room type update
+
+-- Room flooring creation
+
+
+-- Room flooring update
+
+
+-- Room dimensions creation
+
+
+-- Room dimension update

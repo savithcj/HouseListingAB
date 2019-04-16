@@ -1,0 +1,14 @@
+\contentsline {section}{\numberline {0.1}Abstract}{2}{section.0.1}
+\contentsline {section}{\numberline {0.2}Introduction}{2}{section.0.2}
+\contentsline {section}{\numberline {0.3}Project Design}{3}{section.0.3}
+\contentsline {subsection}{\numberline {0.3.1}System Identification}{3}{subsection.0.3.1}
+\contentsline {subsection}{\numberline {0.3.2}System Users}{5}{subsection.0.3.2}
+\contentsline {subsubsection}{Service Providers}{5}{subsection.0.3.2}
+\contentsline {subsubsection}{System Admins}{6}{subsection.0.3.2}
+\contentsline {subsection}{\numberline {0.3.3}Transaction Collection}{6}{subsection.0.3.3}
+\contentsline {section}{\numberline {0.4}Implementation}{7}{section.0.4}
+\contentsline {subsection}{\numberline {0.4.1}Relational Model}{7}{subsection.0.4.1}
+\contentsline {subsection}{\numberline {0.4.2}DBMS Design}{15}{subsection.0.4.2}
+\contentsline {subsubsection}{SQL Statements}{20}{figure.0.25}
+\contentsline {section}{\numberline {0.5}API Documentation}{22}{section.0.5}
+\contentsline {section}{\numberline {0.6}User Manual}{23}{section.0.6}

@@ -1,0 +1,11 @@
+\BOOKMARK [1][-]{section.0.1}{Abstract}{}% 1
+\BOOKMARK [1][-]{section.0.2}{Introduction}{}% 2
+\BOOKMARK [1][-]{section.0.3}{Project Design}{}% 3
+\BOOKMARK [2][-]{subsection.0.3.1}{System Identification}{section.0.3}% 4
+\BOOKMARK [2][-]{subsection.0.3.2}{System Users}{section.0.3}% 5
+\BOOKMARK [2][-]{subsection.0.3.3}{Transaction Collection}{section.0.3}% 6
+\BOOKMARK [1][-]{section.0.4}{Implementation}{}% 7
+\BOOKMARK [2][-]{subsection.0.4.1}{Relational Model}{section.0.4}% 8
+\BOOKMARK [2][-]{subsection.0.4.2}{DBMS Design}{section.0.4}% 9
+\BOOKMARK [1][-]{section.0.5}{API Documentation}{}% 10
+\BOOKMARK [1][-]{section.0.6}{User Manual}{}% 11
